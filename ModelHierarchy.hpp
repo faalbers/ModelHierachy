@@ -6,5 +6,6 @@
 #include "Elements/Point.hpp"
 #include "Elements/PointArray.hpp"
 #include "Elements/Frame.hpp"
+#include "Elements/Node.hpp"
 
 #endif

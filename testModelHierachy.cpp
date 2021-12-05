@@ -13,6 +13,18 @@ int main()
     MH::Point point(1,2,3);
     std::cout << point << std::endl;
 
+    auto nodeA = new MH::Node("Fred");
+    auto nodeB = new MH::Node("Bob",nodeA);
+    auto nodeC = new MH::Node("Jef",nodeA);
+    auto nodeD = new MH::Node("Jim",nodeB);
+    auto nodeE = new MH::Node("John",nodeB);
+    
+    nodeA->printHierarchy();
+
+    delete nodeB;
+
+    nodeA->printHierarchy();
+
     /*
     std::cout << "LIMIT = " << EIGEN_STACK_ALLOCATION_LIMIT << std::endl;
 
