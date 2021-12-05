@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-MH::Node::Node(std::string name, Node *parent)
+MH::Node::Node(std::string name, std::shared_ptr<Model> model, Node *parent)
     : name_(name)
+    , model_(model)
     , parent_(parent)
 {
     if ( parent != nullptr) parent_->children_.insert(this);
@@ -27,8 +28,21 @@ std::string MH::Node::pathName() const
 
 void MH::Node::printHierarchy() const
 {
-    std::cout << pathName() << std::endl;
+    std::cout << pathName();
+    if (model_ != nullptr ) std::cout << " (" << model_.use_count() << ")";
+    std::cout << std::endl;
     for ( auto &child : children_ ) child->printHierarchy();
+}
+
+MH::Node *MH::Node::findNodePath(std::string nodePath)
+{
+    if ( pathName() == nodePath ) return this;
+    Node *foundNode = nullptr;
+    for ( auto &child : children_ ) {
+        foundNode = child->findNodePath(nodePath);
+        if ( foundNode != nullptr ) break;
+    }
+    return foundNode;
 }
 
 void MH::Node::pathName_(std::string &pathName) const
