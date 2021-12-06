@@ -10,6 +10,12 @@ MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t recursions)
     updateControlPoints_();
 }
 
+void MH::ChaikinCurve::setControlPointNum(size_t controlPointNum)
+{
+    controlPointNum_ = controlPointNum;
+    updateControlPoints_();
+}
+
 void MH::ChaikinCurve::setControlPoint(size_t index, double x, double y, double z)
 {
     controlPoints_(index,0) = x;
@@ -34,6 +40,13 @@ void MH::ChaikinCurve::setControlPointZ(size_t index, double val)
 {
     controlPoints_(index,2) = val;
     updateCurve_();
+}
+
+Eigen::Matrix<double, Eigen::Dynamic, 4> MH::ChaikinCurve::getControlPoints() const
+{
+    Eigen::Matrix<double, Eigen::Dynamic, 4> cpCopy(controlPoints_.rows(),4);
+    cpCopy = controlPoints_;
+    return cpCopy;
 }
 
 size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const

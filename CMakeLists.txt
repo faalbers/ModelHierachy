@@ -9,7 +9,7 @@ file(GLOB ELEMENTS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} Elements/*.cpp )
 file(GLOB MODELS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} Models/*.cpp )
 
 add_library(ModelHierarchy STATIC ${ELEMENTS} ${MODELS} ModelHierarchy.cpp)
-target_include_directories(ModelHierarchy PUBLIC C:/eigen-3.4.0)
+target_include_directories(ModelHierarchy PUBLIC C:/eigen-3.4.0 ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(testModelHierachy testModelHierachy.cpp)
 target_link_libraries(testModelHierachy PRIVATE ModelHierarchy )
