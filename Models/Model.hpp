@@ -13,6 +13,7 @@ public:
     Model();
 
 protected:
+    friend class Node;
     Eigen::Matrix<double, Eigen::Dynamic, 4> vertices_;
 
 };

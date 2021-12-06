@@ -7,10 +7,16 @@
 int main()
 {
     MH::ModelHierachy modelH;
+    modelH.setFrameAxisY(0,-1,0);
+    modelH.setFramePosition(300,300,0);
 
     auto chaikin = std::make_shared<MH::ChaikinCurve>();
 
-    //auto chaikinNode = modelH.addModel(chaikin, "Chaikin");
+    //chaikin->setControlPointY(0, 100);
+
+    auto chaikinNode = modelH.addModel(chaikin, "Chaikin");
+
+    std::cout << chaikinNode->getTransformedVertices() << std::endl;
 
     //modelH.printHierarchy();
     

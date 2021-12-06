@@ -23,6 +23,11 @@ public:
 
     void    printHierarchy(bool data = false) const;
 
+    void        setFrameAxisX(double x, double y, double z);
+    void        setFrameAxisY(double x, double y, double z);
+    void        setFrameAxisZ(double x, double y, double z);
+    void        setFramePosition(double x, double y, double z);
+
 private:
     Node    *world_;
 };

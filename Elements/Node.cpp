@@ -36,6 +36,13 @@ Eigen::Matrix4d MH::Node::getTransform() const
     return transform;
 }
 
+Eigen::Matrix<double, Eigen::Dynamic, 4> MH::Node::getTransformedVertices() const
+{
+    Eigen::Matrix<double, Eigen::Dynamic, 4> transformed(model_->vertices_.rows(),4);
+    transformed = model_->vertices_ * getTransform();
+    return transformed;
+}
+
 void MH::Node::printHierarchy(bool data) const
 {
     std::cout << pathName();
@@ -79,6 +86,26 @@ void MH::Node::setSy(double y) { sy_ = y; setTransform_(); }
 
 void MH::Node::setSz(double z) { sz_ = z; setTransform_(); }
 
+void MH::Node::setFrameAxisX(double x, double y, double z)
+{
+    frame_(0,0) = x; frame_(0,1) = y; frame_(0,2) = z;
+}
+
+void MH::Node::setFrameAxisY(double x, double y, double z)
+{
+    frame_(1,0) = x; frame_(1,1) = y; frame_(1,2) = z;
+}
+
+void MH::Node::setFrameAxisZ(double x, double y, double z)
+{
+    frame_(2,0) = x; frame_(2,1) = y; frame_(2,2) = z;
+}
+
+void MH::Node::setFramePosition(double x, double y, double z)
+{
+    frame_(3,0) = x; frame_(3,1) = y; frame_(3,2) = z;
+}
+
 void MH::Node::pathName_(std::string &pathName) const
 {
     if (parent_ != nullptr) parent_->pathName_(pathName);
@@ -118,9 +145,9 @@ void MH::Node::setTransform_()
 
 void MH::Node::getTransform_(Eigen::Matrix4d &transform) const
 {
-
     if (parent_ != nullptr) {
         transform *= transform_;
         parent_->getTransform_(transform);
     }
+    transform *= frame_;
 }

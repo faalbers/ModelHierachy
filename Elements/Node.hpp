@@ -30,7 +30,14 @@ public:
     void        setSy(double y);
     void        setSz(double z);
 
+    void        setFrameAxisX(double x, double y, double z);
+    void        setFrameAxisY(double x, double y, double z);
+    void        setFrameAxisZ(double x, double y, double z);
+    void        setFramePosition(double x, double y, double z);
+
     Eigen::Matrix4d getTransform() const;
+
+    Eigen::Matrix<double, Eigen::Dynamic, 4> getTransformedVertices() const;
 
 private:
     void        pathName_(std::string &pathName) const;

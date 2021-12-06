@@ -11,6 +11,11 @@ class ChaikinCurve : public Model
 public:
     ChaikinCurve(size_t cPointNum = 4, size_t recursions = 4);
 
+    void setControlPoint(size_t index, double x, double y, double z);
+    void setControlPointX(size_t index, double val);
+    void setControlPointY(size_t index, double val);
+    void setControlPointZ(size_t index, double val);
+
 private:
     size_t  vertexCount_(size_t cPointNum, size_t recursions) const;
     void    updateControlPoints_();

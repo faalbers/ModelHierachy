@@ -10,6 +10,32 @@ MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t recursions)
     updateControlPoints_();
 }
 
+void MH::ChaikinCurve::setControlPoint(size_t index, double x, double y, double z)
+{
+    controlPoints_(index,0) = x;
+    controlPoints_(index,1) = y;
+    controlPoints_(index,2) = z;
+    updateCurve_();
+}
+
+void MH::ChaikinCurve::setControlPointX(size_t index, double val)
+{
+    controlPoints_(index,0) = val;
+    updateCurve_();
+}
+
+void MH::ChaikinCurve::setControlPointY(size_t index, double val)
+{
+    controlPoints_(index,1) = val;
+    updateCurve_();
+}
+
+void MH::ChaikinCurve::setControlPointZ(size_t index, double val)
+{
+    controlPoints_(index,2) = val;
+    updateCurve_();
+}
+
 size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const
 {
     if (recursions == 0) return cPointNum;
@@ -31,8 +57,6 @@ void MH::ChaikinCurve::updateControlPoints_()
 
 void MH::ChaikinCurve::updateCurve_()
 {
-    std::cout << vertices_ << std::endl;
-
     size_t vertexCount = vertexCount_(controlPointNum_, recursions_);
     vertices_.resize(vertexCount, 4);
     vertices_.topRows(controlPointNum_) = controlPoints_;
