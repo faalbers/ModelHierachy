@@ -3,11 +3,8 @@
 
 #define EIGEN_STACK_ALLOCATION_LIMIT 0
 
-//#include "Elements/Point.hpp"
-//#include "Elements/PointArray.hpp"
-//#include "Elements/Frame.hpp"
-#include "Elements/Node.hpp"
-#include "Models/Model.hpp"
+#include "Elements.hpp"
+#include "Models.hpp"
 #include <string>
 #include <memory>
 
@@ -24,7 +21,7 @@ public:
 
     Node    *findNodePath(std::string nodePath);
 
-    void    printHierarchy() const;
+    void    printHierarchy(bool data = false) const;
 
 private:
     Node    *world_;

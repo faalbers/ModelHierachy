@@ -3,27 +3,62 @@
 
 #include <iostream>
 #include <chrono>
-#include <memory>
 
 int main()
 {
+    MH::ModelHierachy modelH;
+
+    auto chaikin = std::make_shared<MH::ChaikinCurve>();
+
+    //auto chaikinNode = modelH.addModel(chaikin, "Chaikin");
+
+    //modelH.printHierarchy();
+    
+    /*
+    auto modelA = std::make_shared<MH::Model>();
+    auto modelB = std::make_shared<MH::Model>();
+    auto modelC = std::make_shared<MH::Model>();
+
+    auto nodeFred = modelH.addModel(modelA, "Fred");
+    auto nodeBob = modelH.addModel(modelA, "Bob", nodeFred);
+    modelH.addModel(modelB, "Jef");
+    auto nodeBibi = modelH.addModel(modelC, "Bibi", nodeBob);
+
+    nodeFred->setRz(M_PI/2);
+    nodeBob->setTy(1);
+
+    std::cout << nodeBibi->getTransform() << std::endl;
+
+    //auto bobNode = modelH.findNodePath("/World/Fred/Bob");
+    //if ( bobNode != nullptr ) {
+    //    std::cout << "Found: " << bobNode->pathName() << std::endl;
+    //    modelH.addModel(modelC, "Bibi", bobNode);
+    //}
+
+    //modelH.printHierarchy(true);
+    //modelA.reset(); modelB.reset();modelC.reset();
+    modelH.printHierarchy();
+    */
+
+    /*
     MH::Frame frame(1,1,1);
     std::cout << frame;
     
     MH::Point point(1,2,3);
     std::cout << point << std::endl;
 
-    auto nodeA = new MH::Node("Fred");
-    auto nodeB = new MH::Node("Bob",nodeA);
-    auto nodeC = new MH::Node("Jef",nodeA);
-    auto nodeD = new MH::Node("Jim",nodeB);
-    auto nodeE = new MH::Node("John",nodeB);
+    auto nodeA = new MH::Node();
+    auto nodeB = new MH::Node(nodeA);
+    auto nodeC = new MH::Node(nodeA);
+    auto nodeD = new MH::Node(nodeB);
+    auto nodeE = new MH::Node(nodeB);
     
-    nodeA->printHierarchy();
+    //nodeA->printHierarchy();
 
     delete nodeB;
 
-    nodeA->printHierarchy();
+    //nodeA->printHierarchy();
+    */
 
     /*
     std::cout << "LIMIT = " << EIGEN_STACK_ALLOCATION_LIMIT << std::endl;
@@ -57,7 +92,8 @@ int main()
     std::cout << "points size: " << points->size() << std::endl;
     std::cout << "point.row(0):\n" << points->row(0) << std::endl;
 
-    std::cout << "Done\n";
     */
+    std::cout << "Done!\n";
+
     return 0;
 }
