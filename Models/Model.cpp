@@ -82,6 +82,14 @@ const Eigen::Matrix<double, Eigen::Dynamic, 4> &MH::Model::getPointArray(std::st
     return pointArrays_.at(name);
 }
 
+void MH::Model::setPointArray(std::string name, const Eigen::Matrix<double, Eigen::Dynamic, 4> &pArray)
+{
+    if ( pointArrays_.count(name) == 0 )
+        error_("setPointArray: parameter with name '"+name+"' does not exist");
+    pointArrays_[name] = pArray;
+    updateParams_();
+}
+
 void MH::Model::setPointInArray(std::string name, size_t index, double x, double y, double z)
 {
     if ( pointArrays_.count(name) == 0 )

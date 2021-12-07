@@ -25,6 +25,7 @@ public:
     Eigen::RowVector4d          getPointFromArray(std::string name, size_t index) const;
     const Eigen::Matrix<double, Eigen::Dynamic, 4>
                                 &getPointArray(std::string name) const;
+    void                        setPointArray(std::string name, const Eigen::Matrix<double, Eigen::Dynamic, 4> &pArray);
     void                        setPointInArray(std::string name, size_t index, double x, double y, double z);
 
 protected:
