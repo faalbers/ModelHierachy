@@ -29,11 +29,11 @@ void MH::ChaikinCurve::updateControlPoints_()
     auto controlPointNum = counts_["cpnum"];
     pointArrays_["cp"].resize(controlPointNum,4);
     pointArrays_["cp"].col(3).setOnes();
-    auto subAngle = M_PI / (controlPointNum-1);
+    auto subAngle = M_PI * 2 / (controlPointNum-1);
     for ( size_t index = 0; index < controlPointNum; index++ ) {
         auto angle = subAngle * index;
-        auto x = -cos(angle)*100;
-        auto y = sin(angle)*100;
+        auto x = -cos(angle)*250;
+        auto y = sin(angle)*250;
         pointArrays_["cp"](index,0) = x;
         pointArrays_["cp"](index,1) = y;
         pointArrays_["cp"](index,2) = 0;
