@@ -39,6 +39,8 @@ public:
 
     Eigen::Matrix<double, Eigen::Dynamic, 4> getTransformedVertices() const;
 
+    std::shared_ptr<Model> getModel() const;
+
 private:
     void        pathName_(std::string &pathName) const;
     void        setTransform_();

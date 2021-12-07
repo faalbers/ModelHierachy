@@ -1,52 +1,14 @@
 #include "ChaikinCurve.hpp"
 
-#include <iostream>
-
 MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t recursions)
-    : controlPointNum_(cPointNum)
-    , recursions_(recursions)
-    , controlPoints_(controlPointNum_,4)
 {
-    updateControlPoints_();
-}
-
-void MH::ChaikinCurve::setControlPointNum(size_t controlPointNum)
-{
-    controlPointNum_ = controlPointNum;
-    updateControlPoints_();
-}
-
-void MH::ChaikinCurve::setControlPoint(size_t index, double x, double y, double z)
-{
-    controlPoints_(index,0) = x;
-    controlPoints_(index,1) = y;
-    controlPoints_(index,2) = z;
-    updateCurve_();
-}
-
-void MH::ChaikinCurve::setControlPointX(size_t index, double val)
-{
-    controlPoints_(index,0) = val;
-    updateCurve_();
-}
-
-void MH::ChaikinCurve::setControlPointY(size_t index, double val)
-{
-    controlPoints_(index,1) = val;
-    updateCurve_();
-}
-
-void MH::ChaikinCurve::setControlPointZ(size_t index, double val)
-{
-    controlPoints_(index,2) = val;
-    updateCurve_();
-}
-
-Eigen::Matrix<double, Eigen::Dynamic, 4> MH::ChaikinCurve::getControlPoints() const
-{
-    Eigen::Matrix<double, Eigen::Dynamic, 4> cpCopy(controlPoints_.rows(),4);
-    cpCopy = controlPoints_;
-    return cpCopy;
+    addValue_("tx", 0); addValue_("ty", 0); addValue_("tz", 0);
+    addValue_("rx", 0); addValue_("ry", 0); addValue_("rz", 0);
+    addValue_("sx", 1); addValue_("sy", 1); addValue_("sz", 1);
+    addCount_("recursions", recursions);
+    addCount_("cpnum", cPointNum);
+    addPointArray_("cp", cPointNum);
+    update_();
 }
 
 size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const
@@ -55,27 +17,38 @@ size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const
     return (2*(vertexCount_(cPointNum, recursions-1)-1));
 }
 
+void MH::ChaikinCurve::update_()
+{
+    updateControlPoints_();
+}
+
 void MH::ChaikinCurve::updateControlPoints_()
 {
-    controlPoints_.resize(controlPointNum_,4);
-    auto subAngle = M_PI / (controlPointNum_-1);
-    for ( size_t index = 0; index < controlPointNum_; index++ ) {
+    auto controlPointNum = counts_["cpnum"];
+    pointArrays_["cp"].resize(controlPointNum,4);
+    pointArrays_["cp"].col(3).setOnes();
+    auto subAngle = M_PI / (controlPointNum-1);
+    for ( size_t index = 0; index < controlPointNum; index++ ) {
         auto angle = subAngle * index;
         auto x = -cos(angle)*100;
         auto y = sin(angle)*100;
-        controlPoints_.row(index) << x, y, 0, 1;
+        pointArrays_["cp"](index,0) = x;
+        pointArrays_["cp"](index,1) = y;
+        pointArrays_["cp"](index,2) = 0;
     }
     updateCurve_();
 }
 
 void MH::ChaikinCurve::updateCurve_()
 {
-    size_t vertexCount = vertexCount_(controlPointNum_, recursions_);
+    auto controlPointNum = pointArrays_["cp"].rows();
+    auto recursions = counts_["recursions"];
+    size_t vertexCount = vertexCount_(controlPointNum, recursions);
     vertices_.resize(vertexCount, 4);
-    vertices_.topRows(controlPointNum_) = controlPoints_;
+    vertices_.topRows(controlPointNum) = pointArrays_["cp"];
     Eigen::Matrix<double, Eigen::Dynamic, 4> tempVertices(vertexCount,4);
-    size_t tempCount = controlPointNum_;
-    for ( size_t recurs = 0; recurs < recursions_; recurs++ )
+    size_t tempCount = controlPointNum;
+    for ( size_t recurs = 0; recurs < recursions; recurs++ )
         tempCount = chaikinAlgorthm_(tempVertices,tempCount);
 }
 

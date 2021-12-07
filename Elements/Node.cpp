@@ -43,6 +43,11 @@ Eigen::Matrix<double, Eigen::Dynamic, 4> MH::Node::getTransformedVertices() cons
     return transformed;
 }
 
+std::shared_ptr<MH::Model> MH::Node::getModel() const
+{
+    return model_;
+}
+
 void MH::Node::printHierarchy(bool data) const
 {
     std::cout << pathName();
