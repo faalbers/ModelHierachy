@@ -32,7 +32,8 @@ protected:
     void            addValue_(std::string name, double value = 0.0);
     void            addCount_(std::string name, size_t value = 0);
     void            addPointArray_(std::string name, size_t size = 0);
-    virtual void    update_() = 0;
+    virtual void    updateParams_() = 0;
+    void            error_(std::string message) const;
 
     Eigen::Matrix<double, Eigen::Dynamic, 4>    vertices_;
     

@@ -12,11 +12,43 @@ int main()
 
     auto chaikin = std::make_shared<MH::ChaikinCurve>();
 
-    //chaikin->setControlPointY(0, 100);
+    //chaikin->getValue("bob");
+    //chaikin->setValue("bob", 20);
+    //chaikin->getPointArrayCount("bob");
+
+    //std::cout << chaikin->getPointFromArray("cp", 3) << std::endl;
+
+    //chaikin->getPointArray("bob");
+
+    chaikin->setPointInArray("cp", 2, 1,2,3);
+    //std::cout << chaikin->getPointFromArray("cp", 3) << std::endl;
+
+    std::cout << chaikin->getPointArray("cp") << std::endl;
+    /*
+    for ( auto &element : chaikin->getValueNames() )
+        std::cout << element << ": " << chaikin->getValue(element) << std::endl;
+    for ( auto &element : chaikin->getCountNames() )
+        std::cout << element << ": " << chaikin->getCount(element) << std::endl;
+    for ( auto &element : chaikin->getPointArrayNames() ) {
+        std::cout << element << ": " << chaikin->getPointArrayCount(element) << std::endl;
+        for ( size_t i = 0; i < chaikin->getPointArrayCount(element); i++ ) {
+            std::cout << "[" << i << "] "
+                << chaikin->getPointFromArray(element, i) << std::endl;
+        }
+        std::cout << chaikin->getPointArray(element) << std::endl;
+    }
+    */
 
     auto chaikinNode = modelH.addModel(chaikin, "Chaikin");
 
-    std::cout << chaikinNode->getTransformedVertices() << std::endl;
+    auto nodeModel = chaikinNode->getModel();
+
+    //std::cout << chaikinNode->getTransformedVertices() << std::endl;
+    //std::cout << nodeModel->getPointArray("cp") << std::endl;
+    //std::cout << "Change cp count to 3\n" << std::endl;
+    //nodeModel->setCount("cpnum", 3);
+    //std::cout << chaikinNode->getTransformedVertices() << std::endl;
+    //std::cout << nodeModel->getPointArray("cp") << std::endl;
 
     //modelH.printHierarchy();
     

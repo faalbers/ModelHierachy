@@ -13,7 +13,7 @@ public:
 
 private:
     size_t  vertexCount_(size_t cPointNum, size_t recursions) const;
-    void    update_();
+    void    updateParams_();
     void    updateControlPoints_();
     void    updateCurve_();
     size_t  chaikinAlgorthm_(

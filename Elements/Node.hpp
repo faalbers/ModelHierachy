@@ -36,6 +36,7 @@ public:
     void        setFramePosition(double x, double y, double z);
 
     Eigen::Matrix4d getTransform() const;
+    Eigen::Matrix4d getTransformInverse() const;
 
     Eigen::Matrix<double, Eigen::Dynamic, 4> getTransformedVertices() const;
 

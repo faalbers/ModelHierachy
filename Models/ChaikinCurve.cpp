@@ -8,7 +8,8 @@ MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t recursions)
     addCount_("recursions", recursions);
     addCount_("cpnum", cPointNum);
     addPointArray_("cp", cPointNum);
-    update_();
+    updateControlPoints_();
+    updateCurve_();
 }
 
 size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const
@@ -17,9 +18,10 @@ size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const
     return (2*(vertexCount_(cPointNum, recursions-1)-1));
 }
 
-void MH::ChaikinCurve::update_()
+void MH::ChaikinCurve::updateParams_()
 {
-    updateControlPoints_();
+    if ( pointArrays_["cp"].rows() != counts_["cpnum"] ) updateControlPoints_();
+    updateCurve_();
 }
 
 void MH::ChaikinCurve::updateControlPoints_()
@@ -36,7 +38,6 @@ void MH::ChaikinCurve::updateControlPoints_()
         pointArrays_["cp"](index,1) = y;
         pointArrays_["cp"](index,2) = 0;
     }
-    updateCurve_();
 }
 
 void MH::ChaikinCurve::updateCurve_()

@@ -36,6 +36,11 @@ Eigen::Matrix4d MH::Node::getTransform() const
     return transform;
 }
 
+Eigen::Matrix4d MH::Node::getTransformInverse() const
+{
+    return getTransform().inverse();
+}
+
 Eigen::Matrix<double, Eigen::Dynamic, 4> MH::Node::getTransformedVertices() const
 {
     Eigen::Matrix<double, Eigen::Dynamic, 4> transformed(model_->vertices_.rows(),4);
