@@ -10,7 +10,11 @@ int main()
     modelH.setFrameAxisY(0,-1,0);
     modelH.setFramePosition(300,300,0);
 
-    auto chaikin = std::make_shared<MH::ChaikinCurve>();
+    //auto chaikin = std::make_shared<MH::ChaikinCurve>();
+    auto bspline = std::make_shared<MH::BSpline>();
+    auto bsplineNode = modelH.addModel(bspline, "BSpline");
+
+    
 
     //chaikin->getValue("bob");
     //chaikin->setValue("bob", 20);
@@ -20,10 +24,10 @@ int main()
 
     //chaikin->getPointArray("bob");
 
-    chaikin->setPointInArray("cp", 2, 1,2,3);
+    //chaikin->setPointInArray("cp", 2, 1,2,3);
     //std::cout << chaikin->getPointFromArray("cp", 3) << std::endl;
 
-    std::cout << chaikin->getPointArray("cp") << std::endl;
+    //std::cout << chaikin->getPointArray("cp") << std::endl;
     /*
     for ( auto &element : chaikin->getValueNames() )
         std::cout << element << ": " << chaikin->getValue(element) << std::endl;
@@ -39,9 +43,9 @@ int main()
     }
     */
 
-    auto chaikinNode = modelH.addModel(chaikin, "Chaikin");
+    //auto chaikinNode = modelH.addModel(chaikin, "Chaikin");
 
-    auto nodeModel = chaikinNode->getModel();
+    //auto nodeModel = chaikinNode->getModel();
 
     //std::cout << chaikinNode->getTransformedVertices() << std::endl;
     //std::cout << nodeModel->getPointArray("cp") << std::endl;

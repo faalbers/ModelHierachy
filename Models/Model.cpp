@@ -52,6 +52,14 @@ const size_t &MH::Model::getCount(std::string name) const
     return counts_.at(name);
 }
 
+void MH::Model::setValueInArray(std::string name, size_t index, double value)
+{
+    if ( valueArrays_.count(name) == 0 )
+        error_("setValueInArray: parameter with name '"+name+"' does not exist");
+    valueArrays_[name](index) = value;
+    updateParams_();
+}
+
 std::vector<std::string> MH::Model::getPointArrayNames() const
 {
     std::vector<std::string> names;
@@ -103,6 +111,14 @@ void MH::Model::setPointInArray(std::string name, size_t index, double x, double
 }
 
 void MH::Model::addValue_(std::string name, double value) { values_[name] = value; }
+
+void MH::Model::addValueArray_(std::string name, size_t size, double value)
+{
+    Eigen::Matrix<double, Eigen::Dynamic, 1> valueArray(size,1);
+    valueArray.col(0).setOnes();
+    valueArray *= value;
+    valueArrays_[name] = valueArray;
+}
 
 void MH::Model::addCount_(std::string name, size_t value) { counts_[name] = value; }
 
