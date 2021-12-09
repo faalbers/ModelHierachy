@@ -32,9 +32,8 @@ std::string MH::Node::pathName() const
 Eigen::Matrix4d MH::Node::getTransform() const
 {
     Eigen::Matrix4d transform = frame_;
-    std::cout << "Transform = frame_(" << pathName() << ")" << std::endl;
     getTransform_(transform);
-    return transform.inverse();
+    return transform;
 }
 
 Eigen::Matrix4d MH::Node::getTransformInverse() const
@@ -145,42 +144,12 @@ void MH::Node::setTransform_()
 
     // set transform
     transform_ = transform.matrix();
-
-    /*
-    // do scale
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> scaleMatrix(4,4);
-    scaleMatrix.setIdentity();
-    scaleMatrix(0,0) = sx_;
-    scaleMatrix(1,1) = sy_;
-    scaleMatrix(2,2) = sz_;
-    transform_ *= scaleMatrix;
-
-    // do rotate ZYX order
-    Eigen::AngleAxisd rollAngle(rz_, Eigen::Vector3d::UnitZ());
-    Eigen::AngleAxisd yawAngle(ry_, Eigen::Vector3d::UnitY());
-    Eigen::AngleAxisd pitchAngle(rx_, Eigen::Vector3d::UnitX());
-    Eigen::Quaternion<double> q = rollAngle * yawAngle * pitchAngle;
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> rotationMatrix(3,3);
-    rotationMatrix = q.matrix();
-    rotationMatrix.conservativeResize(4,4);
-    rotationMatrix.row(3) << 0,0,0,1;
-    rotationMatrix.col(3) << 0,0,0,1;
-    transform_ *= rotationMatrix;
-
-    // do translate
-    transform_(3,0) = tx_;
-    transform_(3,1) = ty_;
-    transform_(3,2) = tz_;
-    */
 }
 
 void MH::Node::getTransform_(Eigen::Matrix4d &transform) const
 {
     if (parent_ != nullptr) {
-        std::cout << "Transform_ *= transform_(" << pathName() << ")" << std::endl;
-        transform *= transform_;
+        transform = transform_ * transform;
         parent_->getTransform_(transform);
-    }
-    std::cout << "Transform_ *= frame_(" << pathName() << ")" << std::endl;
-    transform *= frame_;
+    } else transform = frame_ * transform_ * transform;
 }
