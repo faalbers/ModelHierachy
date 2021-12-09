@@ -10,9 +10,9 @@ int main()
     modelH.setFrameAxisY(0,-1,0);
     modelH.setFramePosition(300,300,0);
 
-    //auto chaikin = std::make_shared<MH::ChaikinCurve>();
-    auto bspline = std::make_shared<MH::BSpline>();
-    auto bsplineNode = modelH.addModel(bspline, "BSpline");
+    auto chaikin = std::make_shared<MH::ChaikinCurve>();
+    //auto bspline = std::make_shared<MH::BSpline>();
+    //auto bsplineNode = modelH.addModel(bspline, "BSpline");
 
     
 

@@ -38,7 +38,7 @@ public:
     Eigen::Matrix4d getTransform() const;
     Eigen::Matrix4d getTransformInverse() const;
 
-    Eigen::Matrix<double, Eigen::Dynamic, 4> getTransformedVertices() const;
+    Eigen::Array4Xd getTransformedVertices() const;
 
     std::shared_ptr<Model> getModel() const;
 

@@ -1,5 +1,7 @@
 #include "ChaikinCurve.hpp"
 
+#include <iostream>
+
 MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t recursions)
 {
     addValue_("tx", 0); addValue_("ty", 0); addValue_("tz", 0);
@@ -20,52 +22,52 @@ size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t recursions) const
 
 void MH::ChaikinCurve::updateParams_()
 {
-    if ( pointArrays_["cp"].rows() != counts_["cpnum"] ) updateControlPoints_();
+    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) updateControlPoints_();
     updateCurve_();
 }
 
 void MH::ChaikinCurve::updateControlPoints_()
 {
     double controlPointNum = counts_["cpnum"];
-    pointArrays_["cp"].resize(controlPointNum,4);
-    pointArrays_["cp"].col(3).setOnes();
+    pointArrays_["cp"].resize(4, controlPointNum);
+    pointArrays_["cp"].row(3).setOnes();
     double subAngle = M_PI * 2 / (controlPointNum-1);
     for ( size_t index = 0; index < controlPointNum; index++ ) {
         double angle = subAngle * index;
         double x = -cos(angle)*250;
         double y = sin(angle)*250;
-        pointArrays_["cp"](index,0) = x;
-        pointArrays_["cp"](index,1) = y;
-        pointArrays_["cp"](index,2) = 0;
+        pointArrays_["cp"](0, index) = x;
+        pointArrays_["cp"](1, index) = y;
+        pointArrays_["cp"](2, index) = 0;
     }
 }
 
 void MH::ChaikinCurve::updateCurve_()
 {
-    size_t controlPointNum = pointArrays_["cp"].rows();
+    size_t controlPointNum = pointArrays_["cp"].cols();
     size_t recursions = counts_["recursions"];
     size_t vertexCount = vertexCount_(controlPointNum, recursions);
-    vertices_.resize(vertexCount, 4);
-    vertices_.topRows(controlPointNum) = pointArrays_["cp"];
-    Eigen::Matrix<double, Eigen::Dynamic, 4> tempVertices(vertexCount,4);
+    vertices_.resize(4, vertexCount);
+    vertices_.leftCols(controlPointNum) = pointArrays_["cp"];
+    Eigen::Array4Xd tempVertices(vertexCount, 4);
     size_t tempCount = controlPointNum;
     for ( size_t recurs = 0; recurs < recursions; recurs++ )
         tempCount = chaikinAlgorthm_(tempVertices,tempCount);
 }
 
 size_t MH::ChaikinCurve::chaikinAlgorthm_(
-    Eigen::Matrix<double, Eigen::Dynamic, 4> &tempVertices,
+    Eigen::Array4Xd &tempVertices,
     size_t tempCount)
 {
     size_t newIndex = 0;
     for ( size_t pathIndex = 0; pathIndex < tempCount; pathIndex++ ) {
         if ( pathIndex == 0 ) continue;
-        Eigen::RowVector4d pathVector = vertices_.row(pathIndex) - vertices_.row(pathIndex-1);
-        tempVertices.row(newIndex) = vertices_.row(pathIndex-1)+(pathVector * 0.25);
+        auto pathVector = vertices_.col(pathIndex) - vertices_.col(pathIndex-1);
+        tempVertices.col(newIndex) = vertices_.col(pathIndex-1)+(pathVector * 0.25);
         newIndex++;
-        tempVertices.row(newIndex) = vertices_.row(pathIndex-1)+(pathVector * 0.75);
+        tempVertices.col(newIndex) = vertices_.col(pathIndex-1)+(pathVector * 0.75);
         newIndex++;
     }
-    vertices_.topRows(newIndex) = tempVertices.topRows(newIndex);
+    vertices_.leftCols(newIndex) = tempVertices.leftCols(newIndex);
     return newIndex;
 }

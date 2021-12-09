@@ -3,7 +3,7 @@
 #include <iostream>
 
 MH::Model::Model()
-    : vertices_(0,4)
+    : vertices_(4,0)
 {
 
 }
@@ -71,26 +71,26 @@ size_t MH::Model::getPointArrayCount(std::string name) const
 {
     if ( pointArrays_.count(name) == 0 )
         error_("getPointArrayCount: parameter with name '"+name+"' does not exist");
-    return pointArrays_.at(name).rows();
+    return pointArrays_.at(name).cols();
 }
 
-Eigen::RowVector4d MH::Model::getPointFromArray(std::string name, size_t index) const
+Eigen::Vector4d MH::Model::getPointFromArray(std::string name, size_t index) const
 {
     if ( pointArrays_.count(name) == 0 )
         error_("getPointFromArray: parameter with name '"+name+"' does not exist");
     if ( index >= pointArrays_.at(name).rows() )
         error_("getPointFromArray: parameter with name '"+name+"' out of bound index: "+std::to_string(index));
-    return pointArrays_.at(name).row(index);
+    return pointArrays_.at(name).col(index);
 }
 
-const Eigen::Matrix<double, Eigen::Dynamic, 4> &MH::Model::getPointArray(std::string name) const
+const Eigen::Array4Xd &MH::Model::getPointArray(std::string name) const
 {
     if ( pointArrays_.count(name) == 0 )
         error_("getPointArray: parameter with name '"+name+"' does not exist");
     return pointArrays_.at(name);
 }
 
-void MH::Model::setPointArray(std::string name, const Eigen::Matrix<double, Eigen::Dynamic, 4> &pArray)
+void MH::Model::setPointArray(std::string name, const Eigen::Array4Xd &pArray)
 {
     if ( pointArrays_.count(name) == 0 )
         error_("setPointArray: parameter with name '"+name+"' does not exist");
@@ -102,11 +102,11 @@ void MH::Model::setPointInArray(std::string name, size_t index, double x, double
 {
     if ( pointArrays_.count(name) == 0 )
         error_("setPointInArray: parameter with name '"+name+"' does not exist");
-    if ( index >= pointArrays_.at(name).rows() )
+    if ( index >= pointArrays_.at(name).cols() )
         error_("setPointInArray: parameter with name '"+name+"' out of bound index: "+std::to_string(index));
-    pointArrays_[name](index,0) = x;
-    pointArrays_[name](index,1) = y;
-    pointArrays_[name](index,2) = z;
+    pointArrays_[name](0, index) = x;
+    pointArrays_[name](1, index) = y;
+    pointArrays_[name](2, index) = z;
     updateParams_();
 }
 
@@ -122,11 +122,10 @@ void MH::Model::addValueArray_(std::string name, size_t size, double value)
 
 void MH::Model::addCount_(std::string name, size_t value) { counts_[name] = value; }
 
-void MH::Model::addPointArray_(std::string name, size_t size)
+void MH::Model::addPointArray_(std::string name, size_t pointCount)
 {
-    Eigen::Matrix<double, Eigen::Dynamic, 4> pointArray(size,4);
-    pointArray.setZero();
-    pointArray.col(3).setOnes();
+    Eigen::Array4Xd pointArray(4,pointCount);
+    pointArray.setZero(); pointArray.row(3).setOnes();
     pointArrays_[name] = pointArray;
 }
 

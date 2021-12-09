@@ -33,29 +33,27 @@ public:
     */
     std::vector<std::string>    getPointArrayNames() const;
     size_t                      getPointArrayCount(std::string name) const;
-    void                        setPointArray(std::string name, const Eigen::Matrix<double, Eigen::Dynamic, 4> &pArray);
+    void                        setPointArray(std::string name, const Eigen::Array4Xd &pArray);
     void                        setPointInArray(std::string name, size_t index, double x, double y, double z);
-    const Eigen::Matrix<double, Eigen::Dynamic, 4>
-                                &getPointArray(std::string name) const;
-    Eigen::RowVector4d          getPointFromArray(std::string name, size_t index) const;
+    const Eigen::Array4Xd       &getPointArray(std::string name) const;
+    Eigen::Vector4d             getPointFromArray(std::string name, size_t index) const;
 
 protected:
     friend class Node;
     void            addValue_(std::string name, double value = 0.0);
     void            addValueArray_(std::string name, size_t size, double value = 0.0);
     void            addCount_(std::string name, size_t value = 0);
-    void            addPointArray_(std::string name, size_t size);
+    void            addPointArray_(std::string name, size_t pointCount);
     virtual void    updateParams_() = 0;
     void            error_(std::string message) const;
 
-    Eigen::Matrix<double, Eigen::Dynamic, 4>    vertices_;
+    Eigen::Array4Xd                             vertices_;
     
     std::map<std::string, double>               values_;
     std::map<std::string, Eigen::Matrix<double, Eigen::Dynamic, 1>>
                                                 valueArrays_;
     std::map<std::string, size_t>               counts_;
-    std::map<std::string, Eigen::Matrix<double, Eigen::Dynamic, 4>>
-                                                pointArrays_;
+    std::map<std::string, Eigen::Array4Xd>      pointArrays_;
 
 };
 

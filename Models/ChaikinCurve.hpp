@@ -17,7 +17,7 @@ private:
     void    updateControlPoints_();
     void    updateCurve_();
     size_t  chaikinAlgorthm_(
-                Eigen::Matrix<double, Eigen::Dynamic, 4> &tempVertices,
+                Eigen::Array4Xd &tempVertices,
                 size_t tempCount);
 };
 
