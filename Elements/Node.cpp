@@ -33,7 +33,7 @@ Eigen::Matrix4d MH::Node::getTransform() const
 {
     Eigen::Matrix4d transform = frame_;
     getTransform_(transform);
-    return transform;
+    return transform.inverse();
 }
 
 Eigen::Matrix4d MH::Node::getTransformInverse() const
@@ -41,10 +41,10 @@ Eigen::Matrix4d MH::Node::getTransformInverse() const
     return getTransform().inverse();
 }
 
-Eigen::Matrix<double, Eigen::Dynamic, 4> MH::Node::getTransformedVertices() const
+Eigen::Array4Xd MH::Node::getTransformedVertices() const
 {
-    Eigen::Matrix<double, Eigen::Dynamic, 4> transformed(model_->vertices_.rows(),4);
-    transformed = model_->vertices_ * getTransform();
+    Eigen::Array4Xd transformed(model_->vertices_.cols(), 4);
+    transformed = getTransform() * model_->vertices_.matrix();
     return transformed;
 }
 
@@ -98,22 +98,22 @@ void MH::Node::setSz(double z) { sz_ = z; setTransform_(); }
 
 void MH::Node::setFrameAxisX(double x, double y, double z)
 {
-    frame_(0,0) = x; frame_(0,1) = y; frame_(0,2) = z;
+    frame_(0,0) = x; frame_(1,0) = y; frame_(2,0) = z;
 }
 
 void MH::Node::setFrameAxisY(double x, double y, double z)
 {
-    frame_(1,0) = x; frame_(1,1) = y; frame_(1,2) = z;
+    frame_(0,1) = x; frame_(1,1) = y; frame_(2,1) = z;
 }
 
 void MH::Node::setFrameAxisZ(double x, double y, double z)
 {
-    frame_(2,0) = x; frame_(2,1) = y; frame_(2,2) = z;
+    frame_(0,2) = x; frame_(1,2) = y; frame_(2,2) = z;
 }
 
 void MH::Node::setFramePosition(double x, double y, double z)
 {
-    frame_(3,0) = x; frame_(3,1) = y; frame_(3,2) = z;
+    frame_(0,3) = x; frame_(1,3) = y; frame_(2,3) = z;
 }
 
 void MH::Node::pathName_(std::string &pathName) const
@@ -127,6 +127,25 @@ void MH::Node::setTransform_()
     // reset transform
     transform_.setIdentity();
 
+    // set translate
+    Eigen::Translation3d translate(tx_,ty_,tz_);
+
+    // set rotation
+    Eigen::AngleAxisd rotX(rx_, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd rotY(ry_, Eigen::Vector3d::UnitY());
+    Eigen::AngleAxisd rotZ(rz_, Eigen::Vector3d::UnitZ());
+
+    // set scale
+    Eigen::AlignedScaling3d scale(sx_,sy_,sz_);
+
+    // creating affine transformation
+    Eigen::Transform<double,3,Eigen::Affine> transform;
+    transform = translate * rotZ * rotY * rotX * scale;
+
+    // set transform
+    transform_ = transform.matrix();
+
+    /*
     // do scale
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> scaleMatrix(4,4);
     scaleMatrix.setIdentity();
@@ -151,6 +170,7 @@ void MH::Node::setTransform_()
     transform_(3,0) = tx_;
     transform_(3,1) = ty_;
     transform_(3,2) = tz_;
+    */
 }
 
 void MH::Node::getTransform_(Eigen::Matrix4d &transform) const
