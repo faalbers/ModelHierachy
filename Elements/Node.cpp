@@ -31,6 +31,7 @@ std::string MH::Node::pathName() const
 
 Eigen::Matrix4d MH::Node::getTransform() const
 {
+    std::cout << "\nTransform = frame_(" << pathName() << ")" << std::endl;
     Eigen::Matrix4d transform = frame_;
     getTransform_(transform);
     return transform;
@@ -156,8 +157,10 @@ void MH::Node::setTransform_()
 void MH::Node::getTransform_(Eigen::Matrix4d &transform) const
 {
     if (parent_ != nullptr) {
+        std::cout << "Transform_ *= transform_(" << pathName() << ")" << std::endl;
         transform *= transform_;
         parent_->getTransform_(transform);
     }
+    std::cout << "Transform_ *= frame_(" << pathName() << ")" << std::endl;
     transform *= frame_;
 }
