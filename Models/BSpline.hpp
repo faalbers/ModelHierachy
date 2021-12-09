@@ -3,7 +3,6 @@
 
 #include "Model.hpp"
 
-
 namespace MH
 {
 
@@ -14,7 +13,7 @@ public:
 
 private:
     void    updateParams_();
-    void    setupControlPoints_();
+    void    updateControlPoints_();
     void    updateCurve_();
 };
 

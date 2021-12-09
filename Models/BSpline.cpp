@@ -8,17 +8,17 @@ MH::BSpline::BSpline(size_t cPointNum)
     addPointArray_("cp", cPointNum);
     addValueArray_("tangle", cPointNum);
     addValueArray_("tsize", cPointNum);
-    setupControlPoints_();
+    updateControlPoints_();
     updateCurve_();
 }
 
 void MH::BSpline::updateParams_()
 {
-    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) setupControlPoints_();
+    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) updateControlPoints_();
     updateCurve_();
 }
 
-void MH::BSpline::setupControlPoints_()
+void MH::BSpline::updateControlPoints_()
 {
     auto controlPointNum = counts_["cpnum"];
     pointArrays_["cp"].resize(4, controlPointNum);
@@ -44,14 +44,14 @@ void MH::BSpline::updateCurve_()
 {
     Eigen::Vector4d cpA = pointArrays_["cp"].col(0);
     Eigen::Vector4d cpTemp;
-    std::cout << cpA << std::endl;
+    //std::cout << cpA.transpose() << std::endl;
     for ( size_t index = 1; index < pointArrays_["cp"].cols(); index++ ) {
         cpTemp(0) = cos(valueArrays_["tangle"](index-1));
         cpTemp(1) = sin(valueArrays_["tangle"](index-1));
         cpTemp *= valueArrays_["tsize"](index-1);
         cpTemp += cpA;
         cpTemp(2) = 0; cpTemp(3) = 1;
-        std::cout << cpTemp << std::endl;
+        //std::cout << cpTemp.transpose() << std::endl;
 
         cpA = pointArrays_["cp"].col(index);
 
@@ -60,9 +60,9 @@ void MH::BSpline::updateCurve_()
         cpTemp *= valueArrays_["tsize"](index-1);
         cpTemp += cpA;
         cpTemp(2) = 0; cpTemp(3) = 1;
-        std::cout << cpTemp << std::endl;
+        //std::cout << cpTemp.transpose() << std::endl;
 
-        std::cout << cpA << std::endl;
+        //std::cout << cpA.transpose() << std::endl;
     }
     /*
     double t;
