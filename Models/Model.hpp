@@ -22,13 +22,12 @@ public:
     void                        setCount(std::string name, size_t value);
     const size_t                &getCount(std::string name) const;
 
-    //std::vector<std::string>    getValueArrayNames() const;
-    //size_t                      getValueArrayCount(std::string name) const;
+    std::vector<std::string>    getValueArrayNames() const;
+    size_t                      getValueArrayCount(std::string name) const;
     //void                        setValueArray(std::string name, const Eigen::Matrix<double, Eigen::Dynamic, 1> &vArray);
     void                        setValueInArray(std::string name, size_t index, double value);
+    const Eigen::ArrayXd        &getValueArray(std::string name) const;
     /*
-    const Eigen::Matrix<double, Eigen::Dynamic, 1>
-                                &getValueArray(std::string name) const;
     double                      getValueFromArray(std::string name, size_t index) const;
     */
     std::vector<std::string>    getPointArrayNames() const;
@@ -50,8 +49,7 @@ protected:
     Eigen::Array4Xd                             vertices_;
     
     std::map<std::string, double>               values_;
-    std::map<std::string, Eigen::Matrix<double, Eigen::Dynamic, 1>>
-                                                valueArrays_;
+    std::map<std::string, Eigen::ArrayXd>       valueArrays_;
     std::map<std::string, size_t>               counts_;
     std::map<std::string, Eigen::Array4Xd>      pointArrays_;
 

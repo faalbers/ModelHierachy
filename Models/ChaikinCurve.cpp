@@ -28,7 +28,7 @@ void MH::ChaikinCurve::updateControlPoints_()
     double subAngle = M_PI * 2 / (controlPointNum-1);
     for ( size_t index = 0; index < controlPointNum; index++ ) {
         double angle = subAngle * index;
-        double x = -cos(angle)*250;
+        double x = cos(angle)*250;
         double y = sin(angle)*250;
         pointArrays_["cp"](0, index) = x;
         pointArrays_["cp"](1, index) = y;

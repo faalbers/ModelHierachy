@@ -12,9 +12,10 @@ public:
     BSpline(size_t cPointNum = 3);
 
 private:
-    void    updateParams_();
-    void    updateControlPoints_();
-    void    updateCurve_();
+    void            updateParams_();
+    void            updateControlPoints_();
+    void            updateCurve_();
+    Eigen::Vector4d bezier_(double &t, size_t first, size_t i, size_t j);
 };
 
 }
