@@ -1,11 +1,8 @@
 #include "Model.hpp"
-
 #include <iostream>
 
 MH::Model::Model()
-    : vertices_(4,0)
 {
-
 }
 
 std::vector<std::string> MH::Model::getValueNames() const
@@ -136,6 +133,19 @@ void MH::Model::setPointInArray(std::string name, size_t index, double x, double
     pointArrays_[name](0, index) = x;
     pointArrays_[name](1, index) = y;
     pointArrays_[name](2, index) = z;
+    updateParams_();
+}
+
+void MH::Model::setPointInArray(std::string name, size_t index, Eigen::Vector4d point)
+{
+    if ( pointArrays_.count(name) == 0 )
+        error_("setPointInArray: parameter with name '"+name+"' does not exist");
+    if ( index >= pointArrays_.at(name).cols() )
+        error_("setPointInArray: parameter with name '"+name+"' out of bound index: "+std::to_string(index));
+    pointArrays_[name](0, index) = point(0);
+    pointArrays_[name](1, index) = point(1);
+    pointArrays_[name](2, index) = point(2);
+
     updateParams_();
 }
 

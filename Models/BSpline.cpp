@@ -1,29 +1,55 @@
 #include "BSpline.hpp"
 
-#include <iostream>
-
 MH::BSpline::BSpline(size_t cPointNum)
 {
     addCount_("cpnum", cPointNum);
     addPointArray_("cp", cPointNum);
+    addPointArray_("tangent", cPointNum);
     addValueArray_("tangle", cPointNum);
     addValueArray_("tsize", cPointNum);
-    updateControlPoints_();
-    updateCurve_();
+    createControlPoints_();
+    //updateCurve_();
+}
+
+Eigen::Array4Xd MH::BSpline::getVertices()
+{
+    Eigen::Array4Xd vertices;
+
+    return vertices;
 }
 
 void MH::BSpline::updateParams_()
 {
-    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) updateControlPoints_();
-    updateCurve_();
+    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) createControlPoints_();
+    //updateCurve_();
 }
 
-void MH::BSpline::updateControlPoints_()
+void MH::BSpline::createControlPoints_()
 {
     auto controlPointNum = counts_["cpnum"];
-    pointArrays_["cp"].resize(4, controlPointNum);
+
+    if ( pointArrays_["cp"].cols() != controlPointNum)
+        pointArrays_["cp"].resize(4, controlPointNum);
     pointArrays_["cp"].setZero();
     pointArrays_["cp"].row(3).setOnes();
+
+    if ( pointArrays_["tangent"].cols() != controlPointNum)
+        pointArrays_["tangent"].resize(4, controlPointNum);
+    pointArrays_["tangent"].setZero();
+    pointArrays_["tangent"].row(3).setOnes();
+    auto subAngle = M_PI * 2 / (controlPointNum-1);
+    for ( size_t index = 0; index < controlPointNum; index++ ) {
+        auto angle = subAngle * index;
+        auto cpX = cos(angle)*250;
+        auto cpY = sin(angle)*250;
+        auto tX = cos(angle+(M_PI/2))*100;
+        auto tY = sin(angle+(M_PI/2))*100;
+        pointArrays_["cp"](0, index) = cpX;
+        pointArrays_["cp"](1, index) = cpY;
+        pointArrays_["tangent"](0, index) = tX;
+        pointArrays_["tangent"](1, index) = tY;
+    }
+    /*
     valueArrays_["tangle"].resize(controlPointNum,1);
     valueArrays_["tsize"].resize(controlPointNum,1);
     valueArrays_["tsize"].setOnes();
@@ -38,8 +64,9 @@ void MH::BSpline::updateControlPoints_()
         pointArrays_["cp"](2, index) = 0;
         valueArrays_["tangle"](index) = angle + (M_PI/2);
     }
+    */
 }
-
+/*
 void MH::BSpline::updateCurve_()
 {
     size_t cpCount = pointArrays_["cp"].cols();
@@ -87,7 +114,8 @@ void MH::BSpline::updateCurve_()
     bPoints.col(index) = vertices_.col(vertexCount-1);
     vertices_ = bPoints;
 }
-
+*/
+/*
 Eigen::Vector4d MH::BSpline::bezier_(double &t, size_t first, size_t i, size_t j)
 {
     if ( j > 0 ) {
@@ -96,3 +124,4 @@ Eigen::Vector4d MH::BSpline::bezier_(double &t, size_t first, size_t i, size_t j
         return vertices_.col(first+i);
     }
 }
+*/

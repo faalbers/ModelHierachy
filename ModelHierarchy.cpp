@@ -1,7 +1,5 @@
 #include "ModelHierarchy.hpp"
 
-#include <iostream>
-
 MH::ModelHierachy::ModelHierachy()
     : world_(new Node("World", nullptr))
 {

@@ -1,5 +1,4 @@
 #include "Node.hpp"
-
 #include <iostream>
 
 MH::Node::Node(std::string name, std::shared_ptr<Model> model, Node *parent)
@@ -43,8 +42,8 @@ Eigen::Matrix4d MH::Node::getTransformInverse() const
 
 Eigen::Array4Xd MH::Node::getTransformedVertices() const
 {
-    Eigen::Array4Xd transformed(model_->vertices_.cols(), 4);
-    transformed = getTransform() * model_->vertices_.matrix();
+    auto transformed = model_->getVertices();
+    transformed = getTransform() * transformed.matrix();
     return transformed;
 }
 
@@ -140,7 +139,7 @@ void MH::Node::setTransform_()
 
     // creating affine transformation
     Eigen::Transform<double,3,Eigen::Affine> transform;
-    transform = translate * rotZ * rotY * rotX * scale;
+    transform = translate * rotX * rotY * rotZ * scale;
 
     // set transform
     transform_ = transform.matrix();

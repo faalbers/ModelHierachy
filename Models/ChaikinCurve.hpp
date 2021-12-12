@@ -9,14 +9,15 @@ namespace MH
 class ChaikinCurve : public Model
 {
 public:
-    ChaikinCurve(size_t cPointNum = 4, size_t recursions = 4);
+    ChaikinCurve(size_t cPointNum = 4, size_t dubdiv = 4);
+
+    Eigen::Array4Xd getVertices();
 
 private:
     void    updateParams_();
-    void    updateControlPoints_();
-    void    updateCurve_();
-    size_t  vertexCount_(size_t cPointNum, size_t recursions) const;
-    size_t  chaikinAlgorthm_(
+    void    createControlPoints_();
+    size_t  vertexCount_(size_t cPointNum, size_t subdiv) const;
+    size_t  chaikinAlgorithm_(
                 Eigen::Array4Xd &tempVertices,
                 size_t tempCount);
 };

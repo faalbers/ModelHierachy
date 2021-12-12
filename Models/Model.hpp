@@ -34,8 +34,11 @@ public:
     size_t                      getPointArrayCount(std::string name) const;
     void                        setPointArray(std::string name, const Eigen::Array4Xd &pArray);
     void                        setPointInArray(std::string name, size_t index, double x, double y, double z);
+    void                        setPointInArray(std::string name, size_t index, Eigen::Vector4d);
     const Eigen::Array4Xd       &getPointArray(std::string name) const;
     Eigen::Vector4d             getPointFromArray(std::string name, size_t index) const;
+
+    virtual Eigen::Array4Xd     getVertices() = 0;
 
 protected:
     friend class Node;
@@ -46,8 +49,6 @@ protected:
     virtual void    updateParams_() = 0;
     void            error_(std::string message) const;
 
-    Eigen::Array4Xd                             vertices_;
-    
     std::map<std::string, double>               values_;
     std::map<std::string, Eigen::ArrayXd>       valueArrays_;
     std::map<std::string, size_t>               counts_;
