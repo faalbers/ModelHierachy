@@ -59,6 +59,14 @@ std::vector<std::string> MH::Model::getValueArrayNames() const
     return names;
 }
 
+void MH::Model::setValueArray(std::string name, Eigen::ArrayXd &vArray)
+{
+    if ( valueArrays_.count(name) == 0 )
+        error_("setValueArray: parameter with name '"+name+"' does not exist");
+    valueArrays_[name] = vArray;
+    updateParams_();
+}
+
 size_t MH::Model::getValueArrayCount(std::string name) const
 {
     if ( valueArrays_.count(name) == 0 )

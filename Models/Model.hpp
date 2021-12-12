@@ -24,7 +24,7 @@ public:
 
     std::vector<std::string>    getValueArrayNames() const;
     size_t                      getValueArrayCount(std::string name) const;
-    //void                        setValueArray(std::string name, const Eigen::Matrix<double, Eigen::Dynamic, 1> &vArray);
+    void                        setValueArray(std::string name, Eigen::ArrayXd &vArray);
     void                        setValueInArray(std::string name, size_t index, double value);
     const Eigen::ArrayXd        &getValueArray(std::string name) const;
     /*

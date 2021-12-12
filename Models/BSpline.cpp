@@ -27,7 +27,7 @@ void MH::BSpline::updateControlPoints_()
     valueArrays_["tangle"].resize(controlPointNum,1);
     valueArrays_["tsize"].resize(controlPointNum,1);
     valueArrays_["tsize"].setOnes();
-    valueArrays_["tsize"] *= 150;
+    valueArrays_["tsize"] *= 100;
     auto subAngle = M_PI * 2 / (controlPointNum-1);
     for ( size_t index = 0; index < controlPointNum; index++ ) {
         auto angle = subAngle * index;
@@ -70,7 +70,7 @@ void MH::BSpline::updateCurve_()
         vIndex++; vertices_.col(vIndex) = cpA;
     }
 
-    size_t subdiff = 10;
+    size_t subdiff = 20;
     size_t bPointsCount = subdiff*(cpCount-1)+1;
     Eigen::Array4Xd bPoints(4,bPointsCount);
     double t;
