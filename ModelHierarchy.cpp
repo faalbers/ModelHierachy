@@ -16,6 +16,12 @@ MH::Node *MH::ModelHierachy::addModel(std::shared_ptr<Model> model, std::string 
     return new Node(name, model, parentNode);
 }
 
+MH::Node *MH::ModelHierachy::addParent(std::string name, Node *parentNode)
+{
+    if ( parentNode == nullptr ) parentNode = world_;
+    return new Node(name, parentNode);
+}
+
 void MH::ModelHierachy::printHierarchy(bool data) const
 {
     world_->printHierarchy(data);

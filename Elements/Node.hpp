@@ -13,6 +13,7 @@ namespace MH
 class Node
 {
 public:
+    Node(std::string name, Node *parent = nullptr);
     Node(std::string name, std::shared_ptr<Model> model, Node *parent = nullptr);
     ~Node();
 

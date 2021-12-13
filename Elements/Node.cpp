@@ -1,6 +1,17 @@
 #include "Node.hpp"
 #include <iostream>
 
+MH::Node::Node(std::string name, Node *parent)
+    : name_(name)
+    , model_(nullptr)
+    , parent_(parent)
+    , tx_(0), ty_(0), tz_(0), rx_(0), ry_(0), rz_(0), sx_(1), sy_(1), sz_(1)
+{
+    if ( parent != nullptr) parent_->children_.insert(this);
+    frame_.setIdentity();
+    transform_.setIdentity();
+}
+
 MH::Node::Node(std::string name, std::shared_ptr<Model> model, Node *parent)
     : name_(name)
     , model_(model)

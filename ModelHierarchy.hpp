@@ -18,6 +18,7 @@ public:
     ~ModelHierachy();
 
     Node    *addModel(std::shared_ptr<Model> model, std::string name, Node *parentNode = nullptr);
+    Node    *addParent(std::string name, Node *parentNode = nullptr);
 
     Node    *findNodePath(std::string nodePath);
 

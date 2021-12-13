@@ -1,27 +1,17 @@
 #include "BSpline.hpp"
 
-MH::BSpline::BSpline(size_t cPointNum)
+MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
 {
+    addCount_("subdiv", subdiv);
     addCount_("cpnum", cPointNum);
     addPointArray_("cp", cPointNum);
     addPointArray_("tangent", cPointNum);
-    addValueArray_("tangle", cPointNum);
-    addValueArray_("tsize", cPointNum);
     createControlPoints_();
-    //updateCurve_();
-}
-
-Eigen::Array4Xd MH::BSpline::getVertices()
-{
-    Eigen::Array4Xd vertices;
-
-    return vertices;
 }
 
 void MH::BSpline::updateParams_()
 {
     if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) createControlPoints_();
-    //updateCurve_();
 }
 
 void MH::BSpline::createControlPoints_()
@@ -49,79 +39,52 @@ void MH::BSpline::createControlPoints_()
         pointArrays_["tangent"](0, index) = tX;
         pointArrays_["tangent"](1, index) = tY;
     }
-    /*
-    valueArrays_["tangle"].resize(controlPointNum,1);
-    valueArrays_["tsize"].resize(controlPointNum,1);
-    valueArrays_["tsize"].setOnes();
-    valueArrays_["tsize"] *= 100;
-    auto subAngle = M_PI * 2 / (controlPointNum-1);
-    for ( size_t index = 0; index < controlPointNum; index++ ) {
-        auto angle = subAngle * index;
-        auto x = cos(angle)*250;
-        auto y = sin(angle)*250;
-        pointArrays_["cp"](0, index) = x;
-        pointArrays_["cp"](1, index) = y;
-        pointArrays_["cp"](2, index) = 0;
-        valueArrays_["tangle"](index) = angle + (M_PI/2);
-    }
-    */
 }
-/*
-void MH::BSpline::updateCurve_()
+
+Eigen::Array4Xd MH::BSpline::getVertices()
 {
-    size_t cpCount = pointArrays_["cp"].cols();
-    size_t vertexCount = ((cpCount-1)*3)+1;
-    vertices_.resize(4,vertexCount);
-    Eigen::Vector4d cpA = pointArrays_["cp"].col(0);
+    size_t cpNum = pointArrays_["cp"].cols();
+    size_t vertexCount = ((cpNum-1)*3)+1;
+    
+    Eigen::Array4Xd vertices(4,vertexCount);
     size_t vIndex = 0;
-    vertices_.col(vIndex) = pointArrays_["cp"].col(0);
-    Eigen::Vector4d cpTemp;
-    for ( size_t index = 1; index < cpCount; index++ ) {
-        cpTemp(0) = cos(valueArrays_["tangle"](index-1));
-        cpTemp(1) = sin(valueArrays_["tangle"](index-1));
-        cpTemp *= valueArrays_["tsize"](index-1);
-        cpTemp += cpA;
-        cpTemp(2) = 0; cpTemp(3) = 1;
-
-        vIndex++; vertices_.col(vIndex) = cpTemp;
-
-        cpA = pointArrays_["cp"].col(index);
-
-        cpTemp(0) = -cos(valueArrays_["tangle"](index));
-        cpTemp(1) = -sin(valueArrays_["tangle"](index));
-        cpTemp *= valueArrays_["tsize"](index-1);
-        cpTemp += cpA;
-        cpTemp(2) = 0; cpTemp(3) = 1;
-
-        vIndex++; vertices_.col(vIndex) = cpTemp;
-        vIndex++; vertices_.col(vIndex) = cpA;
+    vertices.col(vIndex) = pointArrays_["cp"].col(0);
+    for ( size_t index = 1; index < cpNum; index++ ) {
+        vIndex++; vertices.col(vIndex) =
+            pointArrays_["cp"].col(index-1) + pointArrays_["tangent"].col(index-1);
+        vertices(3, vIndex) = 1;
+        vIndex++; vertices.col(vIndex) =
+            pointArrays_["cp"].col(index) - pointArrays_["tangent"].col(index);
+        vertices(3, vIndex) = 1;
+        vIndex++; vertices.col(vIndex) = pointArrays_["cp"].col(index);
     }
 
-    size_t subdiff = 20;
-    size_t bPointsCount = subdiff*(cpCount-1)+1;
+    size_t subdiv = getCount("subdiv");
+    subdiv = pow(2,subdiv);
+    size_t bPointsCount = subdiv*(cpNum-1)+1;
     Eigen::Array4Xd bPoints(4,bPointsCount);
     double t;
     size_t index = 0;
     size_t cpStart;
-    for ( size_t cpIndex = 0; cpIndex < cpCount-1; cpIndex++) {
+    for ( size_t cpIndex = 0; cpIndex < cpNum-1; cpIndex++) {
         cpStart = cpIndex*3;
-        for ( size_t sub = 0; sub < subdiff; sub++) {
-            t = (double) sub / subdiff;
-            bPoints.col(index) = bezier_(t, cpStart, 3, 3);
+        for ( size_t sub = 0; sub < subdiv; sub++) {
+            t = (double) sub / subdiv;
+            bPoints.col(index) = bezier_(t, vertices, cpStart, 3, 3);
             index++;
         }
     }
-    bPoints.col(index) = vertices_.col(vertexCount-1);
-    vertices_ = bPoints;
+    bPoints.col(index) = vertices.col(vertexCount-1);
+    vertices = bPoints;
+
+    return vertices;
 }
-*/
-/*
-Eigen::Vector4d MH::BSpline::bezier_(double &t, size_t first, size_t i, size_t j)
+
+Eigen::Vector4d MH::BSpline::bezier_(double &t, Eigen::Array4Xd &vertices, size_t first, size_t i, size_t j)
 {
     if ( j > 0 ) {
-        return ((1.0-t)*bezier_(t,first,i-1,j-1) + t*bezier_(t,first,i,j-1));
+        return ((1.0-t)*bezier_(t, vertices,first,i-1,j-1) + t*bezier_(t, vertices, first,i,j-1));
     } else {
-        return vertices_.col(first+i);
+        return vertices.col(first+i);
     }
 }
-*/
