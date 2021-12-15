@@ -22,14 +22,17 @@ public:
     void                        setCount(std::string name, size_t value);
     const size_t                &getCount(std::string name) const;
 
+    std::vector<std::string>    getMatrixNames() const;
+    void                        setMatrix(std::string name, Eigen::Matrix4d value);
+    const Eigen::Matrix4d       &getMatrix(std::string name) const;
+
     std::vector<std::string>    getValueArrayNames() const;
     size_t                      getValueArrayCount(std::string name) const;
     void                        setValueArray(std::string name, Eigen::ArrayXd &vArray);
     void                        setValueInArray(std::string name, size_t index, double value);
     const Eigen::ArrayXd        &getValueArray(std::string name) const;
-    /*
     double                      getValueFromArray(std::string name, size_t index) const;
-    */
+
     std::vector<std::string>    getPointArrayNames() const;
     size_t                      getPointArrayCount(std::string name) const;
     void                        setPointArray(std::string name, const Eigen::Array4Xd &pArray);
@@ -53,7 +56,7 @@ protected:
     std::map<std::string, Eigen::ArrayXd>       valueArrays_;
     std::map<std::string, size_t>               counts_;
     std::map<std::string, Eigen::Array4Xd>      pointArrays_;
-
+    std::map<std::string, Eigen::Matrix4d>      matrices_;
 };
 
 }
