@@ -48,8 +48,9 @@ protected:
     void            addValue_(std::string name, double value = 0.0);
     void            addValueArray_(std::string name, size_t size, double value = 0.0);
     void            addCount_(std::string name, size_t value = 0);
-    void            addPointArray_(std::string name, size_t pointCount);
-    virtual void    updateParams_() = 0;
+    void            addPointArray_(std::string name, size_t pointCount = 0);
+    virtual void    changeParam_(std::string name) = 0;
+    virtual void    readParam_(std::string name) = 0;
     void            error_(std::string message) const;
 
     std::map<std::string, double>               values_;

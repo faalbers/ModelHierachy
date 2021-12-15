@@ -6,12 +6,17 @@ MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
     addCount_("cpnum", cPointNum);
     addPointArray_("cp", cPointNum);
     addPointArray_("tangent", cPointNum);
+    addPointArray_("vtx");
     createControlPoints_();
 }
 
-void MH::BSpline::updateParams_()
+void MH::BSpline::changeParam_(std::string name)
 {
-    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) createControlPoints_();
+    if ( name == "cpnum" && (pointArrays_["cp"].cols() != counts_["cpnum"])) createControlPoints_();
+}
+
+void MH::BSpline::readParam_(std::string name)
+{
 }
 
 void MH::BSpline::createControlPoints_()

@@ -1,10 +1,13 @@
 #include "ChaikinCurve.hpp"
 
+#include <iostream>
+
 MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t subdiv)
 {
     addCount_("subdiv", subdiv);
     addCount_("cpnum", cPointNum);
     addPointArray_("cp", cPointNum);
+    addPointArray_("vtx");
     createControlPoints_();
 }
 
@@ -23,9 +26,13 @@ Eigen::Array4Xd MH::ChaikinCurve::getVertices()
     return vertices;
 }
 
-void MH::ChaikinCurve::updateParams_()
+void MH::ChaikinCurve::changeParam_(std::string name)
 {
-    if ( pointArrays_["cp"].cols() != counts_["cpnum"] ) createControlPoints_();
+    if ( name == "cpnum" && (pointArrays_["cp"].cols() != counts_["cpnum"])) createControlPoints_();
+}
+
+void MH::ChaikinCurve::readParam_(std::string name)
+{
 }
 
 void MH::ChaikinCurve::createControlPoints_()

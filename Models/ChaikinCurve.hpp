@@ -14,7 +14,8 @@ public:
     Eigen::Array4Xd getVertices();
 
 private:
-    void    updateParams_();
+    void    changeParam_(std::string name) override;
+    void    readParam_(std::string name) override;
     void    createControlPoints_();
     size_t  vertexCount_(size_t cPointNum, size_t subdiv) const;
     size_t  chaikinAlgorithm_(

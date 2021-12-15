@@ -17,7 +17,7 @@ void MH::Model::setValue(std::string name, double value)
     if ( values_.count(name) == 0 )
         error_("setValue: parameter with name '"+name+"' does not exist");
     values_[name] = value;
-    updateParams_();
+    changeParam_(name);
 }
 
 const double &MH::Model::getValue(std::string name) const
@@ -39,7 +39,7 @@ void MH::Model::setCount(std::string name, size_t value)
     if ( counts_.count(name) == 0 )
         error_("setCount: parameter with name '"+name+"' does not exist");
     counts_[name] = value;
-    updateParams_();
+    changeParam_(name);
 }
 
 const size_t &MH::Model::getCount(std::string name) const
@@ -61,7 +61,7 @@ void MH::Model::setMatrix(std::string name, Eigen::Matrix4d matrix)
     if ( matrices_.count(name) == 0 )
         error_("setMatrix: parameter with name '"+name+"' does not exist");
     matrices_[name] = matrix;
-    updateParams_();
+    changeParam_(name);
 }
 
 const Eigen::Matrix4d &MH::Model::getMatrix(std::string name) const
@@ -90,7 +90,7 @@ void MH::Model::setValueArray(std::string name, Eigen::ArrayXd &vArray)
     if ( valueArrays_.count(name) == 0 )
         error_("setValueArray: parameter with name '"+name+"' does not exist");
     valueArrays_[name] = vArray;
-    updateParams_();
+    changeParam_(name);
 }
 
 void MH::Model::setValueInArray(std::string name, size_t index, double value)
@@ -98,7 +98,7 @@ void MH::Model::setValueInArray(std::string name, size_t index, double value)
     if ( valueArrays_.count(name) == 0 )
         error_("setValueInArray: parameter with name '"+name+"' does not exist");
     valueArrays_[name](index) = value;
-    updateParams_();
+    changeParam_(name);
 }
 
 const Eigen::ArrayXd &MH::Model::getValueArray(std::string name) const
@@ -136,7 +136,7 @@ void MH::Model::setPointArray(std::string name, const Eigen::Array4Xd &pArray)
     if ( pointArrays_.count(name) == 0 )
         error_("setPointArray: parameter with name '"+name+"' does not exist");
     pointArrays_[name] = pArray;
-    updateParams_();
+    changeParam_(name);
 }
 
 void MH::Model::setPointInArray(std::string name, size_t index, double x, double y, double z)
@@ -148,7 +148,7 @@ void MH::Model::setPointInArray(std::string name, size_t index, double x, double
     pointArrays_[name](0, index) = x;
     pointArrays_[name](1, index) = y;
     pointArrays_[name](2, index) = z;
-    updateParams_();
+    changeParam_(name);
 }
 
 void MH::Model::setPointInArray(std::string name, size_t index, Eigen::Vector4d point)
@@ -160,8 +160,7 @@ void MH::Model::setPointInArray(std::string name, size_t index, Eigen::Vector4d 
     pointArrays_[name](0, index) = point(0);
     pointArrays_[name](1, index) = point(1);
     pointArrays_[name](2, index) = point(2);
-
-    updateParams_();
+    changeParam_(name);
 }
 
 Eigen::Vector4d MH::Model::getPointFromArray(std::string name, size_t index) const

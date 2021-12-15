@@ -14,8 +14,9 @@ public:
     Eigen::Array4Xd getVertices();
 
 private:
-    void            updateParams_();
-    void            createControlPoints_();
+    void    changeParam_(std::string name) override;
+    void    readParam_(std::string name) override;
+    void    createControlPoints_();
 
     Eigen::Vector4d bezier_(double &t, Eigen::Array4Xd &vertices, size_t first, size_t i, size_t j);
 };
