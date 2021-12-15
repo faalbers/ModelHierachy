@@ -1,6 +1,7 @@
 #include "BSpline.hpp"
 
 MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
+    : doVtxUpdate_(true)
 {
     addCount_("subdiv", false, subdiv);
     addCount_("cpnum", false, cPointNum);
@@ -13,10 +14,14 @@ MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
 void MH::BSpline::changeParam_(std::string name)
 {
     if ( name == "cpnum" && (pointArrays_["cp"].cols() != counts_["cpnum"])) createControlPoints_();
+    else if ( name == "cp" ) doVtxUpdate_ = true;
+    else if ( name == "tangent" ) doVtxUpdate_ = true;
+    else if ( name == "subdiv" ) doVtxUpdate_ = true;
 }
 
 void MH::BSpline::readParam_(std::string name)
 {
+    if ( name == "vtx" ) updateVtx();
 }
 
 void MH::BSpline::createControlPoints_()
@@ -44,24 +49,27 @@ void MH::BSpline::createControlPoints_()
         pointArrays_["tangent"](0, index) = tX;
         pointArrays_["tangent"](1, index) = tY;
     }
+    doVtxUpdate_ = true;
 }
 
-Eigen::Array4Xd MH::BSpline::getVertices()
+void MH::BSpline::updateVtx()
 {
+    if ( !doVtxUpdate_ ) return;
+
     size_t cpNum = pointArrays_["cp"].cols();
     size_t vertexCount = ((cpNum-1)*3)+1;
     
-    Eigen::Array4Xd vertices(4,vertexCount);
+    pointArrays_["vtx"].resize(4,vertexCount);
     size_t vIndex = 0;
-    vertices.col(vIndex) = pointArrays_["cp"].col(0);
+    pointArrays_["vtx"].col(vIndex) = pointArrays_["cp"].col(0);
     for ( size_t index = 1; index < cpNum; index++ ) {
-        vIndex++; vertices.col(vIndex) =
+        vIndex++; pointArrays_["vtx"].col(vIndex) =
             pointArrays_["cp"].col(index-1) + pointArrays_["tangent"].col(index-1);
-        vertices(3, vIndex) = 1;
-        vIndex++; vertices.col(vIndex) =
+        pointArrays_["vtx"](3, vIndex) = 1;
+        vIndex++; pointArrays_["vtx"].col(vIndex) =
             pointArrays_["cp"].col(index) - pointArrays_["tangent"].col(index);
-        vertices(3, vIndex) = 1;
-        vIndex++; vertices.col(vIndex) = pointArrays_["cp"].col(index);
+        pointArrays_["vtx"](3, vIndex) = 1;
+        vIndex++; pointArrays_["vtx"].col(vIndex) = pointArrays_["cp"].col(index);
     }
 
     size_t subdiv = getCount("subdiv");
@@ -75,21 +83,21 @@ Eigen::Array4Xd MH::BSpline::getVertices()
         cpStart = cpIndex*3;
         for ( size_t sub = 0; sub < subdiv; sub++) {
             t = (double) sub / subdiv;
-            bPoints.col(index) = bezier_(t, vertices, cpStart, 3, 3);
+            bPoints.col(index) = bezier_(t, cpStart, 3, 3);
             index++;
         }
     }
-    bPoints.col(index) = vertices.col(vertexCount-1);
-    vertices = bPoints;
+    bPoints.col(index) = pointArrays_["vtx"].col(vertexCount-1);
+    pointArrays_["vtx"] = bPoints;
 
-    return vertices;
+    doVtxUpdate_ = false;
 }
 
-Eigen::Vector4d MH::BSpline::bezier_(double &t, Eigen::Array4Xd &vertices, size_t first, size_t i, size_t j)
+Eigen::Vector4d MH::BSpline::bezier_(double &t, size_t first, size_t i, size_t j)
 {
     if ( j > 0 ) {
-        return ((1.0-t)*bezier_(t, vertices,first,i-1,j-1) + t*bezier_(t, vertices, first,i,j-1));
+        return ((1.0-t)*bezier_(t, first,i-1,j-1) + t*bezier_(t, first,i,j-1));
     } else {
-        return vertices.col(first+i);
+        return pointArrays_["vtx"].col(first+i);
     }
 }

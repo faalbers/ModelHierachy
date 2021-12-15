@@ -53,7 +53,8 @@ Eigen::Matrix4d MH::Node::getTransformInverse() const
 
 Eigen::Array4Xd MH::Node::getTransformedVertices() const
 {
-    auto transformed = model_->getVertices();
+    auto transformed = model_->getPointArray("vtx");
+    //auto transformed = model_->getVertices();
     transformed = getTransform() * transformed.matrix();
     return transformed;
 }

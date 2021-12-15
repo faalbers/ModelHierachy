@@ -1,8 +1,7 @@
 #include "ChaikinCurve.hpp"
 
-#include <iostream>
-
 MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t subdiv)
+    : doVtxUpdate_(true)
 {
     addCount_("subdiv", false, subdiv);
     addCount_("cpnum", false, cPointNum);
@@ -11,28 +10,16 @@ MH::ChaikinCurve::ChaikinCurve(size_t cPointNum, size_t subdiv)
     createControlPoints_();
 }
 
-Eigen::Array4Xd MH::ChaikinCurve::getVertices()
-{
-    size_t subdiv = counts_["subdiv"];
-    size_t cpNum = pointArrays_["cp"].cols();
-    size_t vertexCount = vertexCount_(cpNum, subdiv);
-
-    Eigen::Array4Xd vertices(4,vertexCount);
-    vertices.leftCols(cpNum) = pointArrays_["cp"];
-    size_t tempCount = cpNum;
-    for ( size_t recurs = 0; recurs < subdiv; recurs++ )
-        tempCount = chaikinAlgorithm_(vertices,tempCount);
-
-    return vertices;
-}
-
 void MH::ChaikinCurve::changeParam_(std::string name)
 {
     if ( name == "cpnum" && (pointArrays_["cp"].cols() != counts_["cpnum"])) createControlPoints_();
+    else if ( name == "cp" ) doVtxUpdate_ = true;
+    else if ( name == "subdiv" ) doVtxUpdate_ = true;
 }
 
 void MH::ChaikinCurve::readParam_(std::string name)
 {
+    if ( name == "vtx" ) updateVtx();
 }
 
 void MH::ChaikinCurve::createControlPoints_()
@@ -49,6 +36,23 @@ void MH::ChaikinCurve::createControlPoints_()
         pointArrays_["cp"](1, index) = y;
         pointArrays_["cp"](2, index) = 0;
     }
+    doVtxUpdate_ = true;
+}
+
+void MH::ChaikinCurve::updateVtx()
+{
+    if ( !doVtxUpdate_ ) return;
+    size_t subdiv = counts_["subdiv"];
+    size_t cpNum = pointArrays_["cp"].cols();
+    size_t vertexCount = vertexCount_(cpNum, subdiv);
+
+    pointArrays_["vtx"].resize(4,vertexCount);
+    pointArrays_["vtx"].leftCols(cpNum) = pointArrays_["cp"];
+    size_t tempCount = cpNum;
+    for ( size_t recurs = 0; recurs < subdiv; recurs++ )
+        tempCount = chaikinAlgorithm_(tempCount);
+    
+    doVtxUpdate_ = false;
 }
 
 size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t subdiv) const
@@ -57,18 +61,16 @@ size_t MH::ChaikinCurve::vertexCount_(size_t cPointNum, size_t subdiv) const
     return (2*(vertexCount_(cPointNum, subdiv-1)-1));
 }
 
-size_t MH::ChaikinCurve::chaikinAlgorithm_(
-    Eigen::Array4Xd &vertices,
-    size_t tempCount)
+size_t MH::ChaikinCurve::chaikinAlgorithm_( size_t tempCount )
 {
-    Eigen::Array4Xd tempVertices = vertices;
+    Eigen::Array4Xd tempVertices = pointArrays_["vtx"];
     size_t newIndex = 0;
     for ( size_t pathIndex = 0; pathIndex < tempCount; pathIndex++ ) {
         if ( pathIndex == 0 ) continue;
         auto pathVector = tempVertices.col(pathIndex) - tempVertices.col(pathIndex-1);
-        vertices.col(newIndex) = tempVertices.col(pathIndex-1)+(pathVector * 0.25);
+        pointArrays_["vtx"].col(newIndex) = tempVertices.col(pathIndex-1)+(pathVector * 0.25);
         newIndex++;
-        vertices.col(newIndex) = tempVertices.col(pathIndex-1)+(pathVector * 0.75);
+        pointArrays_["vtx"].col(newIndex) = tempVertices.col(pathIndex-1)+(pathVector * 0.75);
         newIndex++;
     }
     return newIndex;

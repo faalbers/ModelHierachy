@@ -41,8 +41,6 @@ public:
     const Eigen::Array4Xd       &getPointArray(std::string name);
     Eigen::Vector4d             getPointFromArray(std::string name, size_t index);
 
-    virtual Eigen::Array4Xd     getVertices() = 0;
-
 protected:
     friend class Node;
     void            addParam_(std::string name, bool readOnly);
