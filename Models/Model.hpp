@@ -45,14 +45,16 @@ public:
 
 protected:
     friend class Node;
-    void            addValue_(std::string name, double value = 0.0);
-    void            addValueArray_(std::string name, size_t size, double value = 0.0);
-    void            addCount_(std::string name, size_t value = 0);
-    void            addPointArray_(std::string name, size_t pointCount = 0);
+    void            addParam_(std::string name, bool readOnly);
+    void            addValue_(std::string name, bool readOnly, double value = 0.0);
+    void            addValueArray_(std::string name,  bool readOnly, size_t size, double value = 0.0);
+    void            addCount_(std::string name,  bool readOnly, size_t value = 0);
+    void            addPointArray_(std::string name,  bool readOnly, size_t pointCount = 0);
     virtual void    changeParam_(std::string name) = 0;
     virtual void    readParam_(std::string name) = 0;
     void            error_(std::string message) const;
 
+    std::map<std::string, bool>                 params_; // list of param names and readOnly bool
     std::map<std::string, double>               values_;
     std::map<std::string, Eigen::ArrayXd>       valueArrays_;
     std::map<std::string, size_t>               counts_;

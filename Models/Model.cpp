@@ -179,20 +179,43 @@ const Eigen::Array4Xd &MH::Model::getPointArray(std::string name) const
     return pointArrays_.at(name);
 }
 
-void MH::Model::addValue_(std::string name, double value) { values_[name] = value; }
-
-void MH::Model::addValueArray_(std::string name, size_t size, double value)
+void MH::Model::addParam_(std::string name, bool readOnly)
 {
+    if (
+        valueArrays_.count(name) > 0 ||
+        values_.count(name) > 0 ||
+        valueArrays_.count(name) > 0 ||
+        counts_.count(name) > 0 ||
+        pointArrays_.count(name) > 0 ||
+        matrices_.count(name) > 0 )
+            error_("addParam: name already exists: "+name);
+    params_[name] = readOnly;
+}
+
+void MH::Model::addValue_(std::string name, bool readOnly, double value)
+{
+    addParam_(name, readOnly);
+    values_[name] = value;
+}
+
+void MH::Model::addValueArray_(std::string name, bool readOnly, size_t size, double value)
+{
+    addParam_(name, readOnly);
     Eigen::ArrayXd valueArray(size);
     valueArray.setOnes();
     valueArray *= value;
     valueArrays_[name] = valueArray;
 }
 
-void MH::Model::addCount_(std::string name, size_t value) { counts_[name] = value; }
-
-void MH::Model::addPointArray_(std::string name, size_t pointCount)
+void MH::Model::addCount_(std::string name, bool readOnly, size_t value)
 {
+    addParam_(name, readOnly);
+    counts_[name] = value;
+}
+
+void MH::Model::addPointArray_(std::string name, bool readOnly, size_t pointCount)
+{
+    addParam_(name, readOnly);
     Eigen::Array4Xd pointArray(4,pointCount);
     pointArray.setZero(); pointArray.row(3).setOnes();
     pointArrays_[name] = pointArray;

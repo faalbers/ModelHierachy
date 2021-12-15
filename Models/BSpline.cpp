@@ -2,11 +2,11 @@
 
 MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
 {
-    addCount_("subdiv", subdiv);
-    addCount_("cpnum", cPointNum);
-    addPointArray_("cp", cPointNum);
-    addPointArray_("tangent", cPointNum);
-    addPointArray_("vtx");
+    addCount_("subdiv", false, subdiv);
+    addCount_("cpnum", false, cPointNum);
+    addPointArray_("cp", false, cPointNum);
+    addPointArray_("tangent", false, cPointNum);
+    addPointArray_("vtx", true);
     createControlPoints_();
 }
 
