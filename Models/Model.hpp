@@ -45,6 +45,8 @@ protected:
     friend class Node;
     void            addParam_(std::string name, bool readOnly);
     void            addValue_(std::string name, bool readOnly, double value = 0.0);
+    void            addMatrix_(std::string name, bool readOnly, Eigen::Matrix4d &matrix);
+    void            addMatrix_(std::string name, bool readOnly);
     void            addValueArray_(std::string name,  bool readOnly, size_t size, double value = 0.0);
     void            addCount_(std::string name,  bool readOnly, size_t value = 0);
     void            addPointArray_(std::string name,  bool readOnly, size_t pointCount = 0);

@@ -205,6 +205,20 @@ void MH::Model::addValue_(std::string name, bool readOnly, double value)
     values_[name] = value;
 }
 
+void MH::Model::addMatrix_(std::string name, bool readOnly, Eigen::Matrix4d &matrix)
+{
+    addParam_(name, readOnly);
+    matrices_[name] = matrix;
+}
+
+void MH::Model::addMatrix_(std::string name, bool readOnly)
+{
+    addParam_(name, readOnly);
+    Eigen::Matrix4d matrix;
+    matrix.setIdentity();
+    matrices_[name] = matrix;
+}
+
 void MH::Model::addValueArray_(std::string name, bool readOnly, size_t size, double value)
 {
     addParam_(name, readOnly);
