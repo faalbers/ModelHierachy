@@ -20,10 +20,11 @@ void MH::Model::setValue(std::string name, double value)
     changeParam_(name);
 }
 
-const double &MH::Model::getValue(std::string name) const
+const double &MH::Model::getValue(std::string name)
 {
     if ( values_.count(name) == 0 )
         error_("getValue: parameter with name '"+name+"' does not exist");
+    readParam_(name);
     return values_.at(name);
 }
 
@@ -42,10 +43,11 @@ void MH::Model::setCount(std::string name, size_t value)
     changeParam_(name);
 }
 
-const size_t &MH::Model::getCount(std::string name) const
+const size_t &MH::Model::getCount(std::string name)
 {
     if ( counts_.count(name) == 0 )
         error_("getCount: parameter with name '"+name+"' does not exist");
+    readParam_(name);
     return counts_.at(name);
 }
 
@@ -64,10 +66,11 @@ void MH::Model::setMatrix(std::string name, Eigen::Matrix4d matrix)
     changeParam_(name);
 }
 
-const Eigen::Matrix4d &MH::Model::getMatrix(std::string name) const
+const Eigen::Matrix4d &MH::Model::getMatrix(std::string name)
 {
     if ( matrices_.count(name) == 0 )
         error_("getMatrix: parameter with name '"+name+"' does not exist");
+    readParam_(name);
     return matrices_.at(name);
 }
 
@@ -101,19 +104,21 @@ void MH::Model::setValueInArray(std::string name, size_t index, double value)
     changeParam_(name);
 }
 
-const Eigen::ArrayXd &MH::Model::getValueArray(std::string name) const
+const Eigen::ArrayXd &MH::Model::getValueArray(std::string name)
 {
     if ( valueArrays_.count(name) == 0 )
         error_("getValueArray: parameter with name '"+name+"' does not exist");
+    readParam_(name);
     return valueArrays_.at(name);
 }
 
-double MH::Model::getValueFromArray(std::string name, size_t index) const
+double MH::Model::getValueFromArray(std::string name, size_t index)
 {
     if ( valueArrays_.count(name) == 0 )
         error_("getValueFromArray: parameter with name '"+name+"' does not exist");
     if ( index >= valueArrays_.at(name).size() )
         error_("getValueFromArray: parameter with name '"+name+"' out of bound index: "+std::to_string(index));
+    readParam_(name);
     return valueArrays_.at(name)(index);
 }
 
@@ -163,19 +168,21 @@ void MH::Model::setPointInArray(std::string name, size_t index, Eigen::Vector4d 
     changeParam_(name);
 }
 
-Eigen::Vector4d MH::Model::getPointFromArray(std::string name, size_t index) const
+Eigen::Vector4d MH::Model::getPointFromArray(std::string name, size_t index)
 {
     if ( pointArrays_.count(name) == 0 )
         error_("getPointFromArray: parameter with name '"+name+"' does not exist");
     if ( index >= pointArrays_.at(name).rows() )
         error_("getPointFromArray: parameter with name '"+name+"' out of bound index: "+std::to_string(index));
+    readParam_(name);
     return pointArrays_.at(name).col(index);
 }
 
-const Eigen::Array4Xd &MH::Model::getPointArray(std::string name) const
+const Eigen::Array4Xd &MH::Model::getPointArray(std::string name)
 {
     if ( pointArrays_.count(name) == 0 )
         error_("getPointArray: parameter with name '"+name+"' does not exist");
+    readParam_(name);
     return pointArrays_.at(name);
 }
 

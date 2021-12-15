@@ -16,30 +16,30 @@ public:
 
     std::vector<std::string>    getValueNames() const;
     void                        setValue(std::string name, double value);
-    const double                &getValue(std::string name) const;
+    const double                &getValue(std::string name);
 
     std::vector<std::string>    getCountNames() const;
     void                        setCount(std::string name, size_t value);
-    const size_t                &getCount(std::string name) const;
+    const size_t                &getCount(std::string name);
 
     std::vector<std::string>    getMatrixNames() const;
     void                        setMatrix(std::string name, Eigen::Matrix4d value);
-    const Eigen::Matrix4d       &getMatrix(std::string name) const;
+    const Eigen::Matrix4d       &getMatrix(std::string name);
 
     std::vector<std::string>    getValueArrayNames() const;
     size_t                      getValueArrayCount(std::string name) const;
     void                        setValueArray(std::string name, Eigen::ArrayXd &vArray);
     void                        setValueInArray(std::string name, size_t index, double value);
-    const Eigen::ArrayXd        &getValueArray(std::string name) const;
-    double                      getValueFromArray(std::string name, size_t index) const;
+    const Eigen::ArrayXd        &getValueArray(std::string name);
+    double                      getValueFromArray(std::string name, size_t index);
 
     std::vector<std::string>    getPointArrayNames() const;
     size_t                      getPointArrayCount(std::string name) const;
     void                        setPointArray(std::string name, const Eigen::Array4Xd &pArray);
     void                        setPointInArray(std::string name, size_t index, double x, double y, double z);
     void                        setPointInArray(std::string name, size_t index, Eigen::Vector4d);
-    const Eigen::Array4Xd       &getPointArray(std::string name) const;
-    Eigen::Vector4d             getPointFromArray(std::string name, size_t index) const;
+    const Eigen::Array4Xd       &getPointArray(std::string name);
+    Eigen::Vector4d             getPointFromArray(std::string name, size_t index);
 
     virtual Eigen::Array4Xd     getVertices() = 0;
 
