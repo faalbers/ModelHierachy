@@ -25,7 +25,13 @@ public:
     void    printHierarchy(bool data = false) const;
 
     static Eigen::Matrix4d  screenTransform(int width, int height);
-    static Eigen::Array4Xd   screenProject(Node *modelNode, Node *cameraNode, std::string pointsName);
+    static Eigen::Array4Xd  pointsToScreen(Node *modelNode, Node *cameraNode, std::string pointsName);
+    static void             screenToPoints(
+                                Node *modelNode, Node *cameraNode,
+                                std::string pointsName, Eigen::Array4Xd points);
+    static void             screenToPoint(
+                                Node *modelNode, Node *cameraNode,
+                                std::string pointsName, size_t pointIndex, Eigen::Vector4d point);
 
     void    setFrameAxisX(double x, double y, double z);
     void    setFrameAxisY(double x, double y, double z);

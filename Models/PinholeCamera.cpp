@@ -1,7 +1,5 @@
 #include "PinholeCamera.hpp"
 
-#include <iostream>
-
 MH::PinholeCamera::PinholeCamera(double near, double far, double fov,
     double screenWidth, double screenHeight)
     : doProjectUpdate_(true)
