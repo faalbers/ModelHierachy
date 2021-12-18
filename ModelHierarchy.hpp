@@ -24,13 +24,18 @@ public:
 
     void    printHierarchy(bool data = false) const;
 
-    void        setFrameAxisX(double x, double y, double z);
-    void        setFrameAxisY(double x, double y, double z);
-    void        setFrameAxisZ(double x, double y, double z);
-    void        setFramePosition(double x, double y, double z);
+    static Eigen::Matrix4d  screenTransform(int width, int height);
+    static Eigen::Array4Xd   screenProject(Node *modelNode, Node *cameraNode, std::string pointsName);
+
+    void    setFrameAxisX(double x, double y, double z);
+    void    setFrameAxisY(double x, double y, double z);
+    void    setFrameAxisZ(double x, double y, double z);
+    void    setFramePosition(double x, double y, double z);
 
 private:
-    Node    *world_;
+    static void error_(std::string message);
+    
+    Node        *world_;
 };
 
 }

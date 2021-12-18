@@ -1,5 +1,7 @@
 #include "ModelHierarchy.hpp"
 
+#include <iostream>
+
 MH::ModelHierachy::ModelHierachy()
     : world_(new Node("World", nullptr))
 {
@@ -50,4 +52,40 @@ void MH::ModelHierachy::setFrameAxisZ(double x, double y, double z)
 void MH::ModelHierachy::setFramePosition(double x, double y, double z)
 {
     world_->setFramePosition(x,y,z);
+}
+
+Eigen::Matrix4d MH::ModelHierachy::screenTransform(int width, int height)
+{
+    if ( width == 0 || height == 0 )
+        error_("screenTransform: width or height can not be zero");
+    Eigen::Matrix4d screenM;
+    double widthDir = (double) (width/abs(width));
+    double heightDir = (double) (height/abs(height));
+
+    screenM.setIdentity();
+    screenM(0,0) = (double) width / 2.0;
+    screenM(1,1) = (double) height / 2.0;
+    screenM(2,2) = 1.0;
+    screenM(0,3) = widthDir * width / 2.0;
+    screenM(1,3) = heightDir * height / 2.0;
+    return screenM;
+}
+
+Eigen::Array4Xd MH::ModelHierachy::screenProject(Node *modelNode, Node *cameraNode, std::string pointsName)
+{
+    Eigen::Array4Xd points =
+        cameraNode->getModel()->getMatrix("project") *
+        modelNode->getTransformTo(cameraNode) *
+        modelNode->getModel()->getPointArray("cp").matrix();
+    for ( auto point : points.colwise() ) point /= point(3);
+    points = cameraNode->getModel()->getMatrix("screen") * points.matrix();
+    return points;
+}
+
+void MH::ModelHierachy::error_(std::string message)
+{
+    std::cout << "MH::ModelHierachy:" << std::endl;
+    std::cout << "-> " << message << std::endl;
+    std::cout << "exit application ..." << std::endl;
+    exit(1);
 }

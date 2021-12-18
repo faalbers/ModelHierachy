@@ -9,14 +9,19 @@ namespace MH
 class PinholeCamera : public Model
 {
 public:
-    PinholeCamera(double near = 1.0, double = -1.0, double viewAngle = M_PI/3);
+    PinholeCamera(
+        double near, double far,
+        double fov,
+        double screenWidth, double screenHeight);
 
 private:
     void    changeParam_(std::string name) override;
     void    readParam_(std::string name) override;
-    void    updateMatrix();
+    void    updateProject_();
+    void    updateScreen_();
 
-    bool    doMatrixUpdate_; // status of matrix recalculation
+    bool    doProjectUpdate_; // status of matrix recalculation
+    bool    doScreenUpdate_; // status of matrix recalculation
 };
 
 }

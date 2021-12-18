@@ -172,7 +172,7 @@ Eigen::Vector4d MH::Model::getPointFromArray(std::string name, size_t index)
 {
     if ( pointArrays_.count(name) == 0 )
         error_("getPointFromArray: parameter with name '"+name+"' does not exist");
-    if ( index >= pointArrays_.at(name).rows() )
+    if ( index >= pointArrays_.at(name).cols() )
         error_("getPointFromArray: parameter with name '"+name+"' out of bound index: "+std::to_string(index));
     readParam_(name);
     return pointArrays_.at(name).col(index);
@@ -242,7 +242,7 @@ void MH::Model::addPointArray_(std::string name, bool readOnly, size_t pointCoun
     pointArrays_[name] = pointArray;
 }
 
-void MH::Model::error_(std::string message) const
+void MH::Model::error_(std::string message)
 {
     std::cout << "MH::Model:" << std::endl;
     std::cout << "-> " << message << std::endl;

@@ -46,6 +46,13 @@ Eigen::Matrix4d MH::Node::getTransform() const
     return transform;
 }
 
+Eigen::Matrix4d MH::Node::getTransformTo(Node *node) const
+{
+    Eigen::Matrix4d transform = frame_;
+    getTransform_(transform);
+    return node->getTransformInverse() * transform;
+}
+
 Eigen::Matrix4d MH::Node::getTransformInverse() const
 {
     return getTransform().inverse();

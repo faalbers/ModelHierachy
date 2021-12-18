@@ -52,7 +52,7 @@ protected:
     void            addPointArray_(std::string name,  bool readOnly, size_t pointCount = 0);
     virtual void    changeParam_(std::string name) = 0;
     virtual void    readParam_(std::string name) = 0;
-    void            error_(std::string message) const;
+    static void     error_(std::string message);
 
     std::map<std::string, bool>                 params_; // list of param names and readOnly bool
     std::map<std::string, double>               values_;
