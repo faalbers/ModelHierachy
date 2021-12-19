@@ -18,8 +18,6 @@ private:
     void    updateVtx();
 
     Eigen::Vector4d bezier_(double &t, size_t first, size_t i, size_t j);
-    
-    bool    doVtxUpdate_; // status of vtx recalculation
 };
 
 }

@@ -19,9 +19,6 @@ private:
     void    readParam_(std::string name) override;
     void    updateProject_();
     void    updateScreen_();
-
-    bool    doProjectUpdate_; // status of matrix recalculation
-    bool    doScreenUpdate_; // status of matrix recalculation
 };
 
 }

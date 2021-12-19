@@ -19,8 +19,6 @@ private:
 
     size_t  vertexCount_(size_t cPointNum, size_t subdiv) const;
     size_t  chaikinAlgorithm_(size_t tempCount);
-    
-    bool    doVtxUpdate_; // status of vtx recalculation
 };
 
 }

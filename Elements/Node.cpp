@@ -50,20 +50,7 @@ Eigen::Matrix4d MH::Node::getTransformTo(Node *node) const
 {
     Eigen::Matrix4d transform = frame_;
     getTransform_(transform);
-    return node->getTransformInverse() * transform;
-}
-
-Eigen::Matrix4d MH::Node::getTransformInverse() const
-{
-    return getTransform().inverse();
-}
-
-Eigen::Array4Xd MH::Node::getTransformedVertices() const
-{
-    auto transformed = model_->getPointArray("vtx");
-    //auto transformed = model_->getVertices();
-    transformed = getTransform() * transformed.matrix();
-    return transformed;
+    return node->getTransform().inverse() * transform;
 }
 
 std::shared_ptr<MH::Model> MH::Node::getModel() const

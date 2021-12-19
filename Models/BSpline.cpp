@@ -1,7 +1,6 @@
 #include "BSpline.hpp"
 
 MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
-    : doVtxUpdate_(true)
 {
     addCount_("subdiv", false, subdiv);
     addCount_("cpnum", false, cPointNum);
@@ -14,14 +13,12 @@ MH::BSpline::BSpline(size_t cPointNum, size_t subdiv)
 void MH::BSpline::changeParam_(std::string name)
 {
     if ( name == "cpnum" && (pointArrays_["cp"].cols() != counts_["cpnum"])) createControlPoints_();
-    else if ( name == "cp" ) doVtxUpdate_ = true;
-    else if ( name == "tangent" ) doVtxUpdate_ = true;
-    else if ( name == "subdiv" ) doVtxUpdate_ = true;
+    if ( name == "cp" || name == "tangent" || name == "subdiv" )
+        updateVtx();
 }
 
 void MH::BSpline::readParam_(std::string name)
 {
-    if ( name == "vtx" ) updateVtx();
 }
 
 void MH::BSpline::createControlPoints_()
@@ -49,13 +46,11 @@ void MH::BSpline::createControlPoints_()
         pointArrays_["tangent"](0, index) = tX;
         pointArrays_["tangent"](1, index) = tY;
     }
-    doVtxUpdate_ = true;
+    updateVtx();
 }
 
 void MH::BSpline::updateVtx()
 {
-    if ( !doVtxUpdate_ ) return;
-
     size_t cpNum = pointArrays_["cp"].cols();
     size_t vertexCount = ((cpNum-1)*3)+1;
     
@@ -89,8 +84,6 @@ void MH::BSpline::updateVtx()
     }
     bPoints.col(index) = pointArrays_["vtx"].col(vertexCount-1);
     pointArrays_["vtx"] = bPoints;
-
-    doVtxUpdate_ = false;
 }
 
 Eigen::Vector4d MH::BSpline::bezier_(double &t, size_t first, size_t i, size_t j)
