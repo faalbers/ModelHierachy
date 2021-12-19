@@ -70,48 +70,25 @@ Eigen::Matrix4d MH::ModelHierachy::screenTransform(int width, int height)
     return screenM;
 }
 
-Eigen::Array4Xd MH::ModelHierachy::pointsToScreen(Node *modelNode, Node *cameraNode, std::string pointsName)
+void MH::ModelHierachy::pointsToScreen(Node *modelNode, Node *cameraNode, Eigen::Array4Xd &points)
 {
-    Eigen::Array4Xd points =
+    points =
         cameraNode->getModel()->getMatrix("project") *
         modelNode->getTransformTo(cameraNode) *
-        modelNode->getModel()->getPointArray(pointsName).matrix();
+        points.matrix();
     for ( auto point : points.colwise() ) point /= point(3);
     points = cameraNode->getModel()->getMatrix("screen") * points.matrix();
-    return points;
 }
 
-void MH::ModelHierachy::screenToPoints(Node *modelNode, Node *cameraNode, std::string pointsName, Eigen::Array4Xd points)
+void MH::ModelHierachy::screenToPoints(Node *modelNode, Node *cameraNode, Eigen::Array4Xd &points)
 {
-    Eigen::Array4Xd mpoints = modelNode->getModel()->getPointArray(pointsName);
     Eigen::Matrix4d transform =
         cameraNode->getModel()->getMatrix("project") *
         modelNode->getTransformTo(cameraNode);
-    mpoints = transform * mpoints.matrix();
     points = cameraNode->getModel()->getMatrix("screen").inverse() * points.matrix();
-    size_t index = 0;
-    for ( auto point : points.colwise() ) {
-        point *= mpoints(3,index);
-        index++;
-    }
     points = transform.inverse() * points.matrix();
+    for ( auto point : points.colwise() ) point /= point(3);
     points.row(3).setOnes();
-    modelNode->getModel()->setPointArray(pointsName,points);
-}
-
-void MH::ModelHierachy::screenToPoint(Node *modelNode, Node *cameraNode,
-    std::string pointsName, size_t pointIndex, Eigen::Vector4d point)
-{
-    Eigen::Vector4d mpoint = modelNode->getModel()->getPointFromArray(pointsName,pointIndex);
-    Eigen::Matrix4d transform =
-        cameraNode->getModel()->getMatrix("project") *
-        modelNode->getTransformTo(cameraNode);
-    mpoint = transform * mpoint;
-    point = cameraNode->getModel()->getMatrix("screen").inverse() * point;
-    point *= mpoint(3);
-    point = transform.inverse() * point;
-    point(3) = 1.0;
-    modelNode->getModel()->setPointInArray(pointsName, pointIndex, point);
 }
 
 void MH::ModelHierachy::error_(std::string message)
